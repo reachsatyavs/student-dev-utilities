@@ -1,0 +1,9 @@
+Age: 29
+Location: Mumbai, Maharashtra
+Gender: Female
+
+Description:
+I was hospitalized for three days due to a severe case of food poisoning
+that led to dehydration. I was put on IV fluids and monitored by the
+hospital staff. The doctors have advised a follow-up consultation after
+one week and a light diet for the next few days.

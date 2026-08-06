@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>New Claim</h1>
+<form method="post" enctype="multipart/form-data" class="card">
+  <label>Age
+    <input type="number" name="age" min="0" max="120" required>
+  </label>
+  <label>Location
+    <input type="text" name="location" required>
+  </label>
+  <label>Gender
+    <select name="gender" required>
+      <option value="">Select...</option>
+      <option value="Female">Female</option>
+      <option value="Male">Male</option>
+      <option value="Other">Other</option>
+    </select>
+  </label>
+  <label>Claim description
+    <textarea name="description" rows="6" placeholder="Describe what happened, e.g. copy from samples/claims/claim_1.txt" required></textarea>
+  </label>
+  <label>Photo of the incident/item (optional)
+    <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif">
+  </label>
+  <label>Medical report (optional, .txt or image)
+    <input type="file" name="medical_report" accept=".txt,.png,.jpg,.jpeg,.gif">
+  </label>
+  <button type="submit">Submit Claim</button>
+</form>
+{% endblock %}

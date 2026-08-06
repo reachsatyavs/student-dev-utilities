@@ -1,0 +1,17 @@
+DUMMY MEDICAL REPORT (for classroom demo only - not a real patient record)
+
+Patient: Sample Patient C
+Age: 60    Gender: Male
+Date of visit: 2026-06-20
+
+Chief complaint: Mild cough and throat irritation after a house fire.
+
+Examination notes:
+- Mild throat redness, likely due to smoke exposure.
+- Oxygen saturation within normal range (98%).
+- No signs of respiratory distress.
+
+Recommendation:
+- Rest and hydration.
+- Follow-up if breathing difficulty develops.
+- No hospitalization required at this time.

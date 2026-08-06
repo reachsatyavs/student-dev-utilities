@@ -1,0 +1,21 @@
+DUMMY MEDICAL REPORT (for classroom demo only - not a real patient record)
+
+Patient: Sample Patient D
+Age: 22    Gender: Male
+Date of visit: 2026-06-22
+
+Chief complaint: Right ankle pain and swelling after a football injury.
+
+Examination notes:
+- Significant swelling and bruising around the lateral ankle.
+- Pain on weight-bearing.
+- Positive anterior drawer test suggesting ligament involvement.
+
+MRI findings:
+- Grade II sprain of the anterior talofibular ligament.
+- No fracture detected.
+
+Recommendation:
+- Use crutches and avoid weight-bearing for 2 weeks.
+- Ice, compression, and elevation.
+- Physiotherapy after initial healing phase.

@@ -1,0 +1,10 @@
+Age: 45
+Location: Pune, Maharashtra
+Gender: Male
+
+Description:
+While driving back from work on the highway, another vehicle hit my car
+from behind at a traffic signal. My car's rear bumper and tail light are
+damaged. I felt a jolt in my neck and have been experiencing mild pain
+since then. I visited a physician who suspects whiplash and recommended
+rest and a neck brace for a week.

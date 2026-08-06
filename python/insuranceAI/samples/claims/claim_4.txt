@@ -1,0 +1,10 @@
+Age: 22
+Location: Hyderabad, Telangana
+Gender: Male
+
+Description:
+I twisted my ankle badly while playing football in a local tournament.
+The ankle swelled up quickly and I was unable to walk on it. I was taken
+to the hospital where the doctor ordered an MRI to check for ligament
+damage. I have been advised to avoid physical activity for at least
+4 weeks and to use crutches in the meantime.

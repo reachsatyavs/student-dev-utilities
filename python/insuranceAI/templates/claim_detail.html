@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Claim #{{ claim.id }}</h1>
+<p><a href="{{ url_for('dashboard') }}">&larr; Back to dashboard</a></p>
+
+<div class="card">
+  <p><strong>Status:</strong> {{ claim.status }}</p>
+  <p><strong>Submitted:</strong> {{ claim.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
+  <p><strong>Age:</strong> {{ claim.age }} &nbsp; <strong>Gender:</strong> {{ claim.gender }} &nbsp; <strong>Location:</strong> {{ claim.location }}</p>
+  <p><strong>Description:</strong><br>{{ claim.description }}</p>
+
+  {% if claim.image_filename %}
+  <p><strong>Attached photo:</strong><br>
+    <img src="{{ url_for('uploaded_file', filename=claim.image_filename) }}" alt="claim photo" class="claim-image">
+  </p>
+  {% endif %}
+
+  {% if claim.medical_report_filename %}
+  <p><strong>Medical report file:</strong>
+    <a href="{{ url_for('uploaded_file', filename=claim.medical_report_filename) }}">{{ claim.medical_report_filename }}</a>
+  </p>
+  {% endif %}
+</div>
+
+<h2>AI-Generated Claim Summary</h2>
+<pre class="ai-summary">{{ claim.ai_summary }}</pre>
+{% endblock %}

@@ -1,0 +1,10 @@
+Age: 60
+Location: Chennai, Tamil Nadu
+Gender: Male
+
+Description:
+A short circuit in the kitchen caused a small fire in my house last week.
+The fire damaged the kitchen cabinets, a section of the ceiling, and some
+electrical appliances. The local fire department was called and put out
+the fire before it spread further. No one was seriously injured, but the
+property damage is significant.

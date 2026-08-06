@@ -1,0 +1,20 @@
+body { font-family: system-ui, sans-serif; margin: 0; background: #f5f6f8; color: #1a1a1a; }
+.navbar { background: #1f2937; color: white; padding: 12px 24px; display: flex; gap: 16px; align-items: center; }
+.navbar .brand { font-weight: bold; margin-right: auto; }
+.navbar a { color: #d1d5db; text-decoration: none; }
+.navbar a:hover { color: white; }
+.container { max-width: 800px; margin: 32px auto; padding: 0 16px; }
+.card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+form.card label { display: block; margin-bottom: 16px; font-weight: 600; }
+form.card input, form.card select, form.card textarea {
+  display: block; width: 100%; margin-top: 4px; padding: 8px;
+  border: 1px solid #ccc; border-radius: 4px; font: inherit; box-sizing: border-box;
+}
+button { background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+button:hover { background: #1d4ed8; }
+.claims-table { width: 100%; border-collapse: collapse; background: white; }
+.claims-table th, .claims-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+.flashes { list-style: none; padding: 12px 16px; background: #fee2e2; color: #991b1b; border-radius: 4px; }
+.hint { color: #6b7280; font-size: 0.9rem; }
+.claim-image { max-width: 100%; border-radius: 4px; margin-top: 8px; }
+.ai-summary { background: white; padding: 16px; border-radius: 8px; white-space: pre-wrap; }

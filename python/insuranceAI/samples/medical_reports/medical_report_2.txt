@@ -1,0 +1,20 @@
+DUMMY MEDICAL REPORT (for classroom demo only - not a real patient record)
+
+Patient: Sample Patient B
+Age: 45    Gender: Male
+Date of visit: 2026-06-18
+
+Chief complaint: Neck pain following a rear-end vehicle collision.
+
+Examination notes:
+- Reduced range of motion in the cervical spine.
+- Mild muscle tenderness in the neck and upper shoulder region.
+- No neurological deficits observed.
+
+Assessment:
+- Consistent with whiplash-associated disorder, grade I-II.
+
+Recommendation:
+- Soft cervical collar for 5-7 days.
+- Anti-inflammatory medication.
+- Physiotherapy if symptoms persist beyond 2 weeks.

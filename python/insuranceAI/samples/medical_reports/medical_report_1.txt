@@ -1,0 +1,21 @@
+DUMMY MEDICAL REPORT (for classroom demo only - not a real patient record)
+
+Patient: Sample Patient A
+Age: 34    Gender: Female
+Date of visit: 2026-06-12
+
+Chief complaint: Right wrist pain after a fall.
+
+Examination notes:
+- Visible swelling over the right wrist.
+- Tenderness on palpation of the distal radius.
+- Limited range of motion due to pain.
+
+X-ray findings:
+- Suspected hairline fracture of the distal radius.
+- No displacement observed.
+
+Recommendation:
+- Apply cast for 3-4 weeks.
+- Follow-up X-ray in 2 weeks.
+- Pain management with prescribed analgesics.

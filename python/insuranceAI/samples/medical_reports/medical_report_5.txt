@@ -1,0 +1,23 @@
+DUMMY MEDICAL REPORT (for classroom demo only - not a real patient record)
+
+Patient: Sample Patient E
+Age: 29    Gender: Female
+Date of admission: 2026-06-25
+Date of discharge: 2026-06-28
+
+Chief complaint: Severe vomiting, diarrhea, and dehydration.
+
+Examination notes:
+- Signs of moderate dehydration on admission.
+- Elevated heart rate, low blood pressure on admission.
+- Stool test indicated bacterial food poisoning.
+
+Treatment given:
+- IV fluid rehydration for 3 days.
+- Antibiotics as per stool culture sensitivity.
+- Monitored vitals every 6 hours.
+
+Recommendation:
+- Light diet (BRAT) for one week.
+- Follow-up consultation after 7 days.
+- Avoid outside food until fully recovered.
