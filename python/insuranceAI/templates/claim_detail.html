@@ -5,6 +5,9 @@
 
 <div class="card">
   <p><strong>Status:</strong> {{ claim.status }}</p>
+  {% if claim.category %}
+  <p><strong>Category:</strong> {{ claim.category }}</p>
+  {% endif %}
   <p><strong>Submitted:</strong> {{ claim.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
   <p><strong>Age:</strong> {{ claim.age }} &nbsp; <strong>Gender:</strong> {{ claim.gender }} &nbsp; <strong>Location:</strong> {{ claim.location }}</p>
   <p><strong>Description:</strong><br>{{ claim.description }}</p>

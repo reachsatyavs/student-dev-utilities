@@ -6,8 +6,8 @@ from werkzeug.utils import secure_filename
 
 from config import Config
 from extensions import db, login_manager
-from models import User, Claim
-from ai_claim import generate_claim_summary
+from models import User, Claim, CLAIM_CATEGORIES
+from ai_claim import generate_claim_summary, suggest_claim_category
 
 
 def create_app():
@@ -23,16 +23,16 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    def allowed_file(filename):
+    def allowed_file(filename, allowed_extensions):
         return (
             "." in filename
-            and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
+            and filename.rsplit(".", 1)[1].lower() in allowed_extensions
         )
 
-    def save_upload(file_storage):
+    def save_upload(file_storage, allowed_extensions):
         if not file_storage or file_storage.filename == "":
             return None
-        if not allowed_file(file_storage.filename):
+        if not allowed_file(file_storage.filename, allowed_extensions):
             flash(f"File type not allowed: {file_storage.filename}")
             return None
         filename = f"{uuid.uuid4().hex}_{secure_filename(file_storage.filename)}"
@@ -71,6 +71,35 @@ def create_app():
         )
         return render_template("dashboard.html", claims=claims)
 
+    @app.route("/claims/advisor", methods=["GET", "POST"])
+    @login_required
+    def claims_advisor():
+        suggestion = None
+        description = ""
+        medical_filename = None
+
+        if request.method == "POST":
+            description = request.form.get("description", "").strip()
+            if not description:
+                flash("Describe what happened first, then ask for a suggestion.")
+                return render_template("advisor.html", description=description)
+
+            medical_filename = save_upload(
+                request.files.get("medical_report"), app.config["ALLOWED_MEDICAL_REPORT_EXTENSIONS"]
+            )
+            medical_path = (
+                os.path.join(app.config["UPLOAD_FOLDER"], medical_filename) if medical_filename else None
+            )
+
+            suggestion = suggest_claim_category(description, medical_path)
+
+        return render_template(
+            "advisor.html",
+            description=description,
+            medical_filename=medical_filename,
+            suggestion=suggestion,
+        )
+
     @app.route("/claims/new", methods=["GET", "POST"])
     @login_required
     def new_claim():
@@ -78,14 +107,30 @@ def create_app():
             age = request.form.get("age", type=int)
             location = request.form.get("location", "").strip()
             gender = request.form.get("gender", "").strip()
+            category = request.form.get("category", "").strip() or None
             description = request.form.get("description", "").strip()
 
             if not (age and location and gender and description):
                 flash("Please fill in age, location, gender, and a description.")
-                return render_template("new_claim.html")
+                return render_template(
+                    "new_claim.html",
+                    categories=CLAIM_CATEGORIES,
+                    prefill_category=category or "",
+                    prefill_description=description,
+                    existing_medical_report_filename=request.form.get("existing_medical_report_filename", ""),
+                )
 
-            image_filename = save_upload(request.files.get("image"))
-            medical_filename = save_upload(request.files.get("medical_report"))
+            image_filename = save_upload(
+                request.files.get("image"), app.config["ALLOWED_IMAGE_EXTENSIONS"]
+            )
+            medical_filename = save_upload(
+                request.files.get("medical_report"), app.config["ALLOWED_MEDICAL_REPORT_EXTENSIONS"]
+            )
+            # If the advisor already saved a medical report and the user
+            # didn't attach a new one here, reuse that one instead of
+            # making them upload the same file twice.
+            if not medical_filename:
+                medical_filename = request.form.get("existing_medical_report_filename") or None
 
             image_path = (
                 os.path.join(app.config["UPLOAD_FOLDER"], image_filename) if image_filename else None
@@ -103,6 +148,7 @@ def create_app():
                 age=age,
                 location=location,
                 gender=gender,
+                category=category,
                 description=description,
                 image_filename=image_filename,
                 medical_report_filename=medical_filename,
@@ -112,7 +158,13 @@ def create_app():
             db.session.commit()
             return redirect(url_for("claim_detail", claim_id=claim.id))
 
-        return render_template("new_claim.html")
+        return render_template(
+            "new_claim.html",
+            categories=CLAIM_CATEGORIES,
+            prefill_category=request.args.get("category", ""),
+            prefill_description=request.args.get("description", ""),
+            existing_medical_report_filename=request.args.get("medical_filename", ""),
+        )
 
     @app.route("/claims/<int:claim_id>")
     @login_required

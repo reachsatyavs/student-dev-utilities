@@ -1,0 +1,43 @@
+Sample data by category
+========================
+
+The 5 sample claim/medical-report pairs each land in a different category
+when run through the AI Advisor (/claims/advisor). Use these to try each
+category without having to write your own claim text:
+
+  claim_1.txt + medical_report_1.txt  -> Personal Injury / Accident
+    (slipped on a wet floor, wrist injury)
+
+  claim_2.txt + medical_report_2.txt  -> Auto Accident
+    (rear-ended at a traffic signal, whiplash)
+
+  claim_3.txt + medical_report_3.txt  -> Property Damage (Fire, Theft, Water, etc.)
+    (kitchen fire, damaged cabinets/ceiling/appliances)
+
+  claim_4.txt + medical_report_4.txt  -> Personal Injury / Accident
+    (twisted ankle playing football)
+
+  claim_5.txt + medical_report_5.txt  -> Health / Illness
+    (hospitalized for food poisoning/dehydration)
+
+None of the 5 samples land in "Other / Not Sure" -- that category is what
+the advisor falls back to when it genuinely can't tell, or when
+GROQ_API_KEY isn't set and it's using the offline fallback checklist. Try
+pasting something vague (e.g. "something happened, not sure what to do")
+into the advisor to see that path.
+
+How to use these with the AI Advisor
+--------------------------------------
+1. Log in and click "AI Advisor" in the nav bar.
+2. Paste the contents of one of the claim_N.txt files into "What happened?".
+3. Upload the matching medical_report_N.txt in the optional file field.
+4. Click "Ask AI for a Suggestion" -- you'll get a category, a short reason,
+   and a numbered checklist of what to do next on the New Claim form.
+5. Click "Start This Claim" to jump to the New Claim form with your
+   description and category already filled in, and the medical report
+   already attached (no need to upload it again).
+6. Fill in the remaining fields (age, location, gender -- these are also in
+   the claim_N.txt file if you want to copy them exactly) and, optionally,
+   attach a photo of the incident/item.
+7. Submit. The claim detail page will show your category alongside the
+   AI-generated summary.

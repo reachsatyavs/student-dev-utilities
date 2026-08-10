@@ -3,6 +3,17 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
 
+# Fixed list the AI advisor must pick from, and the New Claim form's
+# category dropdown is built from -- keeping it in one place means both
+# always agree on what a valid category is.
+CLAIM_CATEGORIES = [
+    "Auto Accident",
+    "Personal Injury / Accident",
+    "Property Damage (Fire, Theft, Water, etc.)",
+    "Health / Illness",
+    "Other / Not Sure",
+]
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -30,6 +41,7 @@ class Claim(db.Model):
     location = db.Column(db.String(120), nullable=False)
     gender = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    category = db.Column(db.String(60))
 
     image_filename = db.Column(db.String(255))
     medical_report_filename = db.Column(db.String(255))

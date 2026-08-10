@@ -20,8 +20,13 @@ class Config:
 
     GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
     GROQ_BASE_URL = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
-    GROQ_MODEL = os.getenv("GROQ_MODEL", "meta-llama/llama-4-scout-17b-16e-instruct")
+    GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.6-27b")
 
     UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB
-    ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "txt"}
+
+    # The incident photo must actually be an image -- it gets base64-encoded
+    # and sent to Groq as image_url, which rejects anything else. The medical
+    # report can be a real image (e.g. a scanned report) or plain text.
+    ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+    ALLOWED_MEDICAL_REPORT_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "txt"}

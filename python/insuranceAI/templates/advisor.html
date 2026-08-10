@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Not sure which category to submit?</h1>
+<p class="hint">
+  Describe what happened (and optionally attach your medical report) and the
+  AI will suggest a claim category and walk you through the New Claim form
+  step by step. This is a suggestion, not a final decision &mdash; you can
+  always change the category yourself before submitting.
+</p>
+
+<form method="post" enctype="multipart/form-data" class="card">
+  <label>What happened?
+    <textarea name="description" rows="6" placeholder="Describe the incident, e.g. copy from samples/claims/claim_2.txt" required>{{ description }}</textarea>
+  </label>
+  <label>Medical report (optional, .txt or image)
+    <input type="file" name="medical_report" accept=".txt,.png,.jpg,.jpeg,.gif">
+  </label>
+  <button type="submit">Ask AI for a Suggestion</button>
+</form>
+
+{% if suggestion %}
+<div class="card suggestion-box">
+  <p class="category-badge">{{ suggestion.category }}</p>
+  <p>{{ suggestion.reason }}</p>
+
+  {% if suggestion.error %}
+  <p class="hint">(AI suggestion unavailable, showing a generic checklist instead: {{ suggestion.error }})</p>
+  {% endif %}
+
+  <h3>Steps to follow on the New Claim form</h3>
+  <ol class="steps-list">
+    {% for step in suggestion.steps %}
+    <li>{{ step }}</li>
+    {% endfor %}
+  </ol>
+
+  <form method="get" action="{{ url_for('new_claim') }}">
+    <input type="hidden" name="category" value="{{ suggestion.category }}">
+    <input type="hidden" name="description" value="{{ description }}">
+    {% if medical_filename %}
+    <input type="hidden" name="medical_filename" value="{{ medical_filename }}">
+    {% endif %}
+    <button type="submit">Start This Claim &rarr;</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

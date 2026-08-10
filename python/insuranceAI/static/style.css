@@ -18,3 +18,10 @@ button:hover { background: #1d4ed8; }
 .hint { color: #6b7280; font-size: 0.9rem; }
 .claim-image { max-width: 100%; border-radius: 4px; margin-top: 8px; }
 .ai-summary { background: white; padding: 16px; border-radius: 8px; white-space: pre-wrap; }
+.suggestion-box { margin-top: 24px; border: 1px solid #bfdbfe; }
+.category-badge {
+  display: inline-block; background: #2563eb; color: white; font-weight: 600;
+  padding: 6px 14px; border-radius: 999px; margin-bottom: 8px;
+}
+.steps-list { padding-left: 20px; }
+.steps-list li { margin-bottom: 8px; }

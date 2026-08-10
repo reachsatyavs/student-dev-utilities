@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>My Claims</h1>
-<p><a href="{{ url_for('new_claim') }}">+ New Claim</a></p>
+<p>
+  <a href="{{ url_for('new_claim') }}">+ New Claim</a> &nbsp;|&nbsp;
+  <a href="{{ url_for('claims_advisor') }}">Not sure which category? Ask the AI advisor</a>
+</p>
 
 {% if claims %}
 <table class="claims-table">
   <thead>
-    <tr><th>ID</th><th>Date</th><th>Age</th><th>Location</th><th>Gender</th><th>Status</th><th></th></tr>
+    <tr><th>ID</th><th>Date</th><th>Category</th><th>Age</th><th>Location</th><th>Gender</th><th>Status</th><th></th></tr>
   </thead>
   <tbody>
     {% for claim in claims %}
     <tr>
       <td>{{ claim.id }}</td>
       <td>{{ claim.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ claim.category or "—" }}</td>
       <td>{{ claim.age }}</td>
       <td>{{ claim.location }}</td>
       <td>{{ claim.gender }}</td>
