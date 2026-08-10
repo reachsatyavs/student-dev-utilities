@@ -1,0 +1,4 @@
+Your password reset code is: {{ otp_code }}
+
+This code expires in 10 minutes. If you didn't request a password reset,
+you can safely ignore this email.

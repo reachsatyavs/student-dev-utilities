@@ -1,0 +1,43 @@
+"""Session 1: run this once to create tables (via SQLAlchemy, from models.py)
+and seed the admin account. Session 3 adds the --sync-products flag to also
+pull the product catalog from https://dummyjson.com/products.
+
+Usage:
+    python init_db.py
+    python init_db.py --sync-products
+"""
+
+import sys
+
+from app import app
+from extensions import db
+from models import User
+from services.product_api import sync_products_from_api
+
+
+def main():
+    with app.app_context():
+        db.create_all()
+        print("Tables created (or already existed).")
+
+        admin_username = app.config["ADMIN_USERNAME"]
+        if not User.query.filter_by(username=admin_username).first():
+            admin = User(
+                username=admin_username,
+                email=app.config["ADMIN_EMAIL"],
+                is_admin=True,
+            )
+            admin.set_password(app.config["ADMIN_PASSWORD"])
+            db.session.add(admin)
+            db.session.commit()
+            print(f"Seeded admin user '{admin_username}'.")
+        else:
+            print(f"Admin user '{admin_username}' already exists, skipping.")
+
+        if "--sync-products" in sys.argv:
+            created = sync_products_from_api()
+            print(f"Synced {created} new product(s) from the API.")
+
+
+if __name__ == "__main__":
+    main()

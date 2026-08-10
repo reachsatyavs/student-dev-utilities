@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      SECRET_KEY: dev-secret-change-me
+    env_file:
+      - .env
+    # Bind-mount the SQLite file to the host so data survives
+    # `docker compose down` and you can open it directly with any
+    # SQLite browser while the container is running.
+    volumes:
+      - ./shopping_cart.db:/app/shopping_cart.db
