@@ -5,6 +5,10 @@ for a 5–6 session / ~12-hour Flask course. The full curriculum (what to build
 each session, in what order, with clear session boundaries) is in
 [`COURSE_PLAN.md`](./COURSE_PLAN.md). This README covers setup only.
 
+> **On Windows?** Follow [`SETUP_WINDOWS.md`](./SETUP_WINDOWS.md) instead of
+> the setup steps below. The commands here are macOS/Linux; several of them
+> (`cp`, `source`, `<` redirection) do not work in PowerShell.
+
 ## Features
 
 - User registration & login (hashed passwords, Flask-Login sessions)
