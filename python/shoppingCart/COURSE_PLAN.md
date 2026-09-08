@@ -77,7 +77,7 @@ source .venv/bin/activate      # Windows: .venv\Scripts\activate
 ```
 
 Their prompt should now show `(.venv)` — that's the signal every later
-`pip install` in this course goes into this project only.
+`python -m pip install` in this course goes into this project only.
 
 ### Part B — Install SQLite (10 min)
 
@@ -147,7 +147,7 @@ you don't want two competing table definitions.
 ### Part E — Same schema, as Python classes (30 min)
 
 ```bash
-pip install flask flask-sqlalchemy python-dotenv
+python -m pip install flask flask-sqlalchemy python-dotenv
 ```
 
 1. `config.py` — reads `.env`, builds the `sqlite:///shopping_cart.db`
@@ -339,7 +339,7 @@ CSRF, and users can recover a forgotten password without an admin's help.
   SMTP configured can still test the whole flow
 
 **Build, in order:**
-1. `pip install flask-limiter flask-wtf flask-mail`
+1. `python -m pip install flask-limiter flask-wtf flask-mail`
 2. `extensions.py` — add `limiter = Limiter(...)`, `csrf = CSRFProtect()`,
    `mail = Mail()`; call `.init_app(app)` for each in `app.py`
 3. Add a hidden `<input type="hidden" name="csrf_token" value="{{

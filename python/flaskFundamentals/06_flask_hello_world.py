@@ -5,7 +5,7 @@ Flask is a package for building web servers in Python -- a program that
 listens for requests from a browser and sends back a response.
 
 Install it first:
-    pip install flask
+    python -m pip install flask
 
 Run this file with:
     python 06_flask_hello_world.py

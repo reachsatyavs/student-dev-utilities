@@ -7,7 +7,7 @@ Flask (06-08). Now a browser visit triggers the fetch, and the result gets
 turned into an HTML page instead of just being printed.
 
 Install if you haven't already:
-    pip install flask requests
+    python -m pip install flask requests
 
 Run this file with:
     python 09_flask_dummyjson.py

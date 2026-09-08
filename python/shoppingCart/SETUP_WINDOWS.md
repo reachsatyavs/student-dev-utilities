@@ -80,8 +80,15 @@ Answer `Y`, then run `.venv\Scripts\Activate.ps1` again.
 ## Step 4 — Install the packages
 
 ```powershell
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
+
+> Use `python -m pip`, not a bare `pip`. Some Python installs never put a
+> `pip.exe` inside `.venv\Scripts\`, so `pip` fails with *"the term 'pip'
+> is not recognized"* even when the venv is active and pip is installed.
+> `python -m pip` runs the same tool through the interpreter you just
+> activated, so it always works — and it can never install into the wrong
+> Python by accident.
 
 Installs Flask, Flask-SQLAlchemy, Flask-Login, python-dotenv and requests.
 Needs an internet connection. Takes about 30 seconds.
@@ -89,7 +96,7 @@ Needs an internet connection. Takes about 30 seconds.
 Check it worked:
 
 ```powershell
-pip list
+python -m pip list
 ```
 
 ---
@@ -180,6 +187,7 @@ python -m flask --app app run --debug
 | `python : The term 'python' is not recognized` | Python isn't on PATH | Reinstall Python with "Add python.exe to PATH" ticked |
 | `running scripts is disabled on this system` | PowerShell blocks scripts | `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` |
 | `ModuleNotFoundError: No module named 'flask'` | venv not activated | Run `.venv\Scripts\Activate.ps1` — look for `(.venv)` in the prompt |
+| `pip : The term 'pip' is not recognized` | This venv has no `pip.exe` shim | Use `python -m pip install -r requirements.txt` instead |
 | `Address already in use` / port 5000 busy | Server already running elsewhere | Close the other terminal, or run with `--port 5001` |
 | Dashboard shows no products | Products never synced | `python init_db.py --sync-products` |
 | `no such table: users` | Step 6 skipped | Run `python init_db.py` |

@@ -6,7 +6,7 @@ A package someone ELSE wrote has to be installed first, with pip
 (Python's package installer), before you can import it.
 
 Install it first:
-    pip install requests
+    python -m pip install requests
 
 `requests` is one of the most common Python packages -- it lets your code
 fetch data from a URL on the internet, the same way a browser would.

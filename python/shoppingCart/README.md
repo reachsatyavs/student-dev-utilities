@@ -111,8 +111,12 @@ opens a `.db` file and lets you browse tables, run queries, and edit rows.
 cd python/shoppingCart
 python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
+
+Use `python -m pip` rather than a bare `pip`: some Python installs create a
+venv without a `pip` executable on the path, and `python -m pip` runs the
+same tool through the interpreter you just activated either way.
 
 ## 4. Configure environment
 
