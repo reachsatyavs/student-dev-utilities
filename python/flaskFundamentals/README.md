@@ -1,7 +1,7 @@
 # Python & Flask Fundamentals ("Session 0")
 
 Warm-up material to run **before** [`../shoppingCart/`](../shoppingCart)'s
-Session 1. Nine plain `.py` scripts, run in order, each one small enough to
+Session 1. Eleven small files, run in order, each one small enough to
 read top to bottom. No database, no templates, no project structure yet —
 just Python, one installed package, and a first web page.
 
@@ -33,14 +33,77 @@ just Python, one installed package, and a first web page.
 | 7 | `07_flask_login_page.py` | A form, `GET` vs `POST`, reading form data |
 | 8 | `08_flask_modular/` (`app.py` + `auth.py`) | Splitting routes into their own file |
 | 9 | `09_flask_dummyjson.py` | Calling an external API from inside a Flask route |
+| 10a | `10a_movie_page.html` | Plain HTML, no Python — open it by double-clicking the file |
+| 10b | `10b_flask_same_page.py` | The exact same HTML, sent by Flask instead |
+| 10 | `10_flask_movie_cast.py` | The same page built from Python data — add movies, add stars, upload photos |
 
-Each of 6-9 prints a URL to open in your browser once you run it
+Each of 6-10 prints a URL to open in your browser once you run it
 (`python 06_flask_hello_world.py`, etc.) — press `Ctrl+C` in the terminal to
 stop the server before running the next one.
 
+## Lesson 10 — static HTML, then dynamic
+
+Run these three in order. They are the same page three times over, and the
+whole point is what changes between them.
+
+**10a — `10a_movie_page.html`.** No Python at all. Double-click the file and
+it opens in your browser. This is what a web page *is*: a text file. Notice
+that the five cast cards are five near-identical blocks of HTML, typed out
+by hand. Adding a sixth star means typing a sixth block.
+
+**10b — `10b_flask_same_page.py`.** Run it, open http://127.0.0.1:5000. The
+page looks identical, because the HTML inside the file is a straight copy of
+`10a`. Nothing is generated — Flask is just handing over the same text. This
+is the whole idea of a web server, and nothing more.
+
+**10 — `10_flask_movie_cast.py`.** Now the HTML is *built* from Python data.
+Nobody typed the cards; a loop made one per entry in a list. That is the only
+difference — and it is why you can now add a movie and a star from the
+browser without editing a single line of code.
+
+### The data
+
+```python
+MOVIES = [
+    {"name": "KGF Chapter 4", "year": "2027", "cast": [
+        {"role": "Hero",    "name": "Yash",   "photo": "yash.png"},
+        {"role": "Villain", "name": "Sudeep", "photo": "sudeep.png"},
+    ]},
+    {"name": "Kantara 2", "year": "2026", "cast": []},
+]
+```
+
+A **list** of movies, because there can be many. Each movie is a **dict**,
+because one movie has several facts about it. One of those facts, `cast`, is
+itself a list of dicts — many stars, each with a role, a name and a photo.
+
+### Exercises
+
+1. Add two movies. Then add stars to each one, and check they land under the
+   right movie.
+2. Add `"Music Director"` to the `ROLES` list, save the file, refresh. It
+   appears in every dropdown straight away.
+3. Save a few star photos from the internet and upload them. The placeholder
+   pictures in `static/images/` are only there for `10a` — replace them with
+   real ones if you like.
+4. Restart the server and reload the page. Everything is gone — `MOVIES` is
+   an ordinary Python list living in memory, so it disappears when the
+   program stops. That is exactly the problem a database solves, and it is
+   what the shoppingCart project does next.
+5. **Build the RCB squad.** Copy the file to `11_flask_rcb_squad.py` and
+   change one line:
+
+   ```python
+   ROLES = ["Batter", "Bowler", "All-rounder", "Captain", "Coach"]
+   ```
+
+   That is the only code change. Add "RCB 2026" as the movie, then add Virat
+   Kohli, Rajat Patidar, Devdutt Padikkal and the rest with their photos.
+   Same program, different subject — that is the point.
+
 ## After this
 
-Once all nine make sense, move on to
+Once all ten make sense, move on to
 [`../shoppingCart/COURSE_PLAN.md`](../shoppingCart/COURSE_PLAN.md) Session 1
 — the real project starts there, and it reuses ideas from here directly:
 routes split into their own file per feature (like `08_flask_modular/`
