@@ -184,3 +184,38 @@ products on startup, and serves it on http://127.0.0.1:5000.
 plain file on your machine you can open with DB Browser for SQLite even
 while the container is running. See [`COURSE_PLAN.md`](./COURSE_PLAN.md)
 Session 6 for a walkthrough of how this is wired together.
+
+## Windows quick steps
+
+Full detail (with troubleshooting) is in
+[`SETUP_WINDOWS.md`](./SETUP_WINDOWS.md). All commands go in PowerShell.
+
+```powershell
+# 1. Check Python (need 3.10+)
+python --version
+
+# 2. Get the code
+cd d:\project
+git clone https://github.com/reachsatyavs/student-dev-utilities.git
+cd student-dev-utilities\python\shoppingCart
+
+# 3. Virtual env
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+
+# 4. Install packages
+python -m pip install -r requirements.txt
+
+# 5. Settings file
+Copy-Item .env.example .env
+
+# 6. Create the database
+python init_db.py --sync-products
+
+# 7. Run the app
+python -m flask --app app run --debug
+# -> open http://127.0.0.1:5000
+
+# 8. Log in
+# Username: admin   Password: Admin@123
+```

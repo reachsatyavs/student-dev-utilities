@@ -36,10 +36,28 @@ just Python, one installed package, and a first web page.
 | 10a | `10a_movie_page.html` | Plain HTML, no Python — open it by double-clicking the file |
 | 10b | `10b_flask_same_page.py` | The exact same HTML, sent by Flask instead |
 | 10 | `10_flask_movie_cast.py` | The same page built from Python data — add movies, add stars, upload photos |
+| 11 | `11_python_collections.ipynb` | Deep dive on `list`, `set`, `tuple`, `dict` — 15 operations each, told as a movie shoot (Yash, Sudeep, Puneeth Rajkumar, cricketers and more) |
 
 Each of 6-10 prints a URL to open in your browser once you run it
 (`python 06_flask_hello_world.py`, etc.) — press `Ctrl+C` in the terminal to
 stop the server before running the next one.
+
+## Lesson 11 — Jupyter notebook
+
+`11_python_collections.ipynb` is a notebook, not a `.py` file — it mixes
+explanation and runnable code in one place, cell by cell, instead of one big
+script. Open it with:
+
+```bash
+python -m pip install notebook
+python -m jupyter notebook
+```
+
+then click `11_python_collections.ipynb` in the browser tab that opens.
+(VS Code and PyCharm can also open `.ipynb` files directly, with no extra
+install, if you'd rather stay in your editor.) Run cells top to bottom with
+`Shift+Enter`; the explanation for each concept is right above the code that
+demonstrates it.
 
 ## Lesson 10 — static HTML, then dynamic
 
