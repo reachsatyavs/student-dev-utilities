@@ -204,6 +204,7 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 
 # 4. Install packages
+python3 -c "import sqlite3; print(sqlite3.sqlite_version)"
 python -m pip install -r requirements.txt
 
 # 5. Settings file
