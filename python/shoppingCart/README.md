@@ -208,7 +208,7 @@ python3 -c "import sqlite3; print(sqlite3.sqlite_version)"
 python -m pip install -r requirements.txt
 
 # 5. Settings file
-Copy-Item .env.example .env
+copy .env.example .env
 
 # 6. Create the database
 python init_db.py --sync-products
