@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shopping Cart Blueprint</title>
+<style>
+  :root{
+    --bg:#f3f6f5;
+    --surface:#ffffff;
+    --surface-2:#eaf1ee;
+    --text:#152322;
+    --text-muted:#516260;
+    --border:#d7e2df;
+    --primary:#0e6e5c;
+    --primary-dark:#0a4d40;
+    --primary-tint:#e3f2ee;
+    --accent:#d9601f;
+    --accent-tint:#fbe8dc;
+    --code-bg:#0f2b26;
+    --code-text:#d8f3ea;
+    --chip-bg:#eef4f2;
+    --shadow: 0 1px 2px rgba(15,43,38,.06), 0 8px 24px -12px rgba(15,43,38,.18);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1614;
+      --surface:#141f1c;
+      --surface-2:#182420;
+      --text:#e7f1ee;
+      --text-muted:#9fb3ae;
+      --border:#283733;
+      --primary:#5fd4b3;
+      --primary-dark:#3fae90;
+      --primary-tint:#173229;
+      --accent:#f39a5f;
+      --accent-tint:#33241a;
+      --code-bg:#0a1512;
+      --code-text:#bdeedb;
+      --chip-bg:#1a2622;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1614;
+    --surface:#141f1c;
+    --surface-2:#182420;
+    --text:#e7f1ee;
+    --text-muted:#9fb3ae;
+    --border:#283733;
+    --primary:#5fd4b3;
+    --primary-dark:#3fae90;
+    --primary-tint:#173229;
+    --accent:#f39a5f;
+    --accent-tint:#33241a;
+    --code-bg:#0a1512;
+    --code-text:#bdeedb;
+    --chip-bg:#1a2622;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Public Sans', system-ui, -apple-system, sans-serif;
+    line-height:1.55;
+    padding-inline:0;
+  }
+  h1,h2,h3,h4{
+    font-family:'Fraunces', Georgia, serif;
+    color:var(--text);
+    text-wrap:balance;
+    margin:0 0 .4em;
+    letter-spacing:-.01em;
+  }
+  code, .mono, .idchip, table.tc td:first-child{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  a{ color:var(--primary-dark); }
+  :root[data-theme="dark"] a, @media (prefers-color-scheme:dark){ a{ color:var(--primary);} }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding-inline:20px;
+  }
+
+  /* ---------- Header ---------- */
+  header.hero{
+    background:
+      radial-gradient(1100px 420px at 15% -20%, var(--primary-tint), transparent 60%),
+      var(--surface);
+    border-bottom:1px solid var(--border);
+    padding-block:44px 32px;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:.78rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--primary-dark);
+    background:var(--primary-tint);
+    border:1px solid var(--border);
+    padding:5px 12px; border-radius:999px;
+    margin-bottom:16px;
+  }
+  header.hero h1{ font-size:clamp(1.9rem, 4vw, 2.6rem); font-weight:700; }
+  header.hero p.lede{
+    max-width:62ch; color:var(--text-muted); font-size:1.05rem; margin-top:10px;
+  }
+  .stat-row{
+    display:flex; flex-wrap:wrap; gap:12px; margin-top:26px;
+  }
+  .stat-tile{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:12px 18px; min-width:120px; box-shadow:var(--shadow);
+  }
+  .stat-tile .num{ font-family:'Fraunces',serif; font-size:1.6rem; font-weight:700; color:var(--primary-dark); font-variant-numeric:tabular-nums; }
+  .stat-tile .lbl{ font-size:.8rem; color:var(--text-muted); }
+
+  /* ---------- Layout: sidebar + content ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:36px;
+    padding-block:32px 80px;
+    align-items:start;
+  }
+  nav.toc{
+    position:sticky; top:16px;
+    display:flex; flex-direction:column; gap:2px;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px;
+    box-shadow:var(--shadow);
+  }
+  nav.toc .toc-title{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); font-weight:600; margin-bottom:6px; padding-inline:8px;}
+  nav.toc a{
+    text-decoration:none; color:var(--text); font-size:.88rem; padding:7px 8px; border-radius:8px;
+  }
+  nav.toc a:hover{ background:var(--chip-bg); }
+
+  .mobile-toc{ display:none; }
+
+  main{ min-width:0; }
+
+  section{ scroll-margin-top:16px; margin-bottom:56px; }
+  section:target, .card:target, .uc-card:target, tr:target{
+    animation: flash 1.8s ease-out;
+  }
+  @keyframes flash{
+    0%{ box-shadow: 0 0 0 3px var(--accent); }
+    100%{ box-shadow: none; }
+  }
+
+  .section-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:14px; }
+  .section-num{ font-family:'IBM Plex Mono',monospace; color:var(--accent); font-weight:600; font-size:.95rem;}
+  section h2{ font-size:1.5rem; }
+  section > p.intro{ color:var(--text-muted); max-width:72ch; }
+
+  .panel{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px 24px; box-shadow:var(--shadow);
+  }
+
+  /* ---------- Tech stack ---------- */
+  .tech-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:14px;
+  }
+  .tech-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 16px; box-shadow:var(--shadow);
+  }
+  .tech-card .name{ font-weight:600; display:flex; align-items:center; gap:8px; }
+  .tech-card .name .dot{ width:8px; height:8px; border-radius:50%; background:var(--primary); flex:none; }
+  .tech-card p{ margin:6px 0 0; color:var(--text-muted); font-size:.88rem; }
+
+  /* ---------- Diagrams ---------- */
+  .diagram-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px; box-shadow:var(--shadow); margin-bottom:22px; overflow-x:auto;
+  }
+  .diagram-card h3{ font-size:1.05rem; margin-bottom:4px; }
+  .diagram-card .cap{ color:var(--text-muted); font-size:.85rem; margin-bottom:14px; }
+  pre.mermaid{ margin:0; }
+
+  /* ---------- Feature cards ---------- */
+  .feature-grid{ display:grid; gap:16px; }
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px; box-shadow:var(--shadow); scroll-margin-top:16px;
+  }
+  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  .card-top h3{ font-size:1.15rem; }
+  .idchip{
+    display:inline-block; font-size:.72rem; font-weight:600; color:var(--primary-dark);
+    background:var(--primary-tint); border:1px solid var(--border); border-radius:6px;
+    padding:2px 7px;
+  }
+  .link-row{ margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .link-row .label{ font-size:.76rem; color:var(--text-muted); margin-right:4px; }
+  .pill{
+    text-decoration:none;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem; font-weight:600;
+    background:var(--chip-bg); color:var(--text);
+    border:1px solid var(--border); border-radius:999px;
+    padding:3px 10px;
+    transition:background .15s;
+  }
+  .pill:hover{ background:var(--accent-tint); color:var(--accent); border-color:var(--accent); }
+  .pill.accent{ background:var(--accent-tint); color:var(--accent); border-color:transparent;}
+
+  /* ---------- Matrix table ---------- */
+  .table-scroll{ overflow-x:auto; }
+  table.matrix{ width:100%; border-collapse:collapse; min-width:720px; }
+  table.matrix th, table.matrix td{
+    text-align:left; padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top;
+  }
+  table.matrix th{
+    font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);
+    border-bottom:2px solid var(--border);
+  }
+  table.matrix td.feat-name{ font-weight:600; }
+  table.matrix tr:last-child td{ border-bottom:none; }
+
+  /* ---------- User stories ---------- */
+  .story-group{ margin-bottom:22px; }
+  .story-group > .group-head{
+    display:flex; align-items:center; gap:10px; margin-bottom:10px;
+  }
+  .group-head h4{ font-family:'Public Sans',sans-serif; font-weight:700; font-size:.95rem; margin:0; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em;}
+  ul.stories{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  ul.stories li{
+    background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--primary);
+    border-radius:10px; padding:12px 16px; scroll-margin-top:16px; box-shadow:var(--shadow);
+  }
+  ul.stories li p{ margin:0; }
+  ul.stories li .story-role{ color:var(--primary-dark); font-weight:600; }
+
+  /* ---------- Use cases ---------- */
+  .uc-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    margin-bottom:14px; box-shadow:var(--shadow); scroll-margin-top:16px; overflow:hidden;
+  }
+  .uc-card summary{
+    cursor:pointer; list-style:none; padding:16px 20px; display:flex; align-items:center; gap:12px; justify-content:space-between; flex-wrap:wrap;
+  }
+  .uc-card summary::-webkit-details-marker{ display:none; }
+  .uc-card summary .uc-title{ display:flex; align-items:center; gap:10px; font-weight:600; }
+  .uc-card summary .chev{ color:var(--text-muted); transition:transform .15s; flex:none; }
+  .uc-card[open] summary .chev{ transform:rotate(90deg); }
+  .uc-body{ padding:0 20px 20px; border-top:1px solid var(--border); }
+  .uc-body h5{ font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); margin:16px 0 6px;}
+  .uc-body ol{ margin:0; padding-left:1.2em; }
+  .uc-body ol li{ margin-bottom:4px; }
+  .uc-meta{ display:flex; flex-wrap:wrap; gap:18px; font-size:.85rem; color:var(--text-muted); margin-top:10px; }
+  .uc-meta strong{ color:var(--text); }
+
+  /* ---------- Test cases ---------- */
+  table.tc{ width:100%; border-collapse:collapse; min-width:760px; }
+  table.tc th, table.tc td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); font-size:.88rem; vertical-align:top; }
+  table.tc th{ font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); }
+  table.tc td:first-child{ font-weight:600; color:var(--primary-dark); white-space:nowrap; }
+  table.tc tbody tr:hover{ background:var(--surface-2); }
+  .tc-group-title{ display:flex; align-items:center; gap:10px; margin:26px 0 10px; }
+  .tc-group-title h4{ margin:0; font-size:1rem; }
+
+  .legend{
+    display:flex; flex-wrap:wrap; gap:14px; font-size:.82rem; color:var(--text-muted); margin-top:10px;
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend .sw{ width:10px; height:10px; border-radius:3px; }
+
+  footer{
+    border-top:1px solid var(--border); padding-block:24px 60px; color:var(--text-muted); font-size:.85rem;
+  }
+
+  @media (max-width: 900px){
+    .layout{ grid-template-columns: 1fr; }
+    nav.toc.desktop{ display:none; }
+    .mobile-toc{
+      display:block; position:sticky; top:0; z-index:5;
+      background:var(--surface); border:1px solid var(--border); border-radius:12px;
+      margin-bottom:8px; box-shadow:var(--shadow);
+    }
+    .mobile-toc summary{ padding:12px 16px; font-weight:600; cursor:pointer; }
+    .mobile-toc .toc-links{ display:flex; flex-direction:column; padding:0 10px 10px; }
+    .mobile-toc a{ padding:8px 10px; text-decoration:none; color:var(--text); border-radius:8px; font-size:.9rem; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Shopping Cart · Course Project</span>
+    <h1>From problem statement to test case, on one page</h1>
+    <p class="lede">
+      This is the map of the Shopping Cart teaching project: what it's for, how it's
+      built, and how a single feature turns into a user story, a use case, and finally
+      something you can actually check off as "tested." Every ID on this page is a
+      link — click one to jump to where it's defined.
+    </p>
+    <div class="stat-row">
+      <div class="stat-tile"><div class="num">5</div><div class="lbl">Features</div></div>
+      <div class="stat-tile"><div class="num">16</div><div class="lbl">User stories</div></div>
+      <div class="stat-tile"><div class="num">8</div><div class="lbl">Use cases</div></div>
+      <div class="stat-tile"><div class="num">21</div><div class="lbl">Test cases</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+
+  <details class="mobile-toc">
+    <summary>Jump to a section ▾</summary>
+    <div class="toc-links">
+      <a href="#problem">1. Problem statement</a>
+      <a href="#goal">2. Goal</a>
+      <a href="#overview">3. Overview</a>
+      <a href="#techstack">4. Tech stack</a>
+      <a href="#design">5. Design</a>
+      <a href="#features">6. Features</a>
+      <a href="#matrix">7. Traceability matrix</a>
+      <a href="#stories">8. User stories</a>
+      <a href="#usecases">9. Use cases</a>
+      <a href="#testcases">10. Test cases</a>
+    </div>
+  </details>
+
+  <nav class="toc desktop">
+    <div class="toc-title">On this page</div>
+    <a href="#problem">1. Problem statement</a>
+    <a href="#goal">2. Goal</a>
+    <a href="#overview">3. Overview</a>
+    <a href="#techstack">4. Tech stack</a>
+    <a href="#design">5. Design</a>
+    <a href="#features">6. Features</a>
+    <a href="#matrix">7. Traceability matrix</a>
+    <a href="#stories">8. User stories</a>
+    <a href="#usecases">9. Use cases</a>
+    <a href="#testcases">10. Test cases</a>
+  </nav>
+
+  <main>
+
+    <!-- 1. PROBLEM STATEMENT -->
+    <section id="problem">
+      <div class="section-head"><span class="section-num">01</span><h2>Problem statement</h2></div>
+      <div class="panel">
+        <p>
+          Most beginner web tutorials stop at "hello world," and most real e-commerce
+          codebases are too large to read end to end in a course. Students need
+          something in between: a project small enough to hold in your head in a few
+          sessions, but with all the moving parts a real online store actually has —
+          an account system, a product catalog, a cart that remembers what you added,
+          a checkout that turns a cart into a permanent order, and an admin who can
+          manage users and stock.
+        </p>
+        <p style="margin-bottom:0">
+          Without that middle step, students either copy a tutorial they don't fully
+          understand, or feel lost the first time they see a real production codebase.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. GOAL -->
+    <section id="goal">
+      <div class="section-head"><span class="section-num">02</span><h2>Goal</h2></div>
+      <div class="panel">
+        <p>Build a working shopping cart web app — and, just as importantly, learn the
+          habit of thinking in this order:</p>
+        <p style="font-family:'IBM Plex Mono',monospace; font-size:.95rem; color:var(--primary-dark); margin:14px 0;">
+          Feature <span style="color:var(--text-muted)">→</span>
+          User Story <span style="color:var(--text-muted)">→</span>
+          Use Case <span style="color:var(--text-muted)">→</span>
+          Test Case
+        </p>
+        <p style="margin-bottom:0">
+          Every button a shopper clicks should trace back to a reason a real person
+          wanted it (a <strong>feature</strong>, told from their side as a
+          <strong>user story</strong>), a precise description of how the system
+          behaves when they use it (a <strong>use case</strong>), and a concrete way
+          to prove it still works (a <strong>test case</strong>). Sections
+          <a href="#features">6</a>–<a href="#testcases">10</a> below walk that whole
+          chain, fully linked.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. OVERVIEW -->
+    <section id="overview">
+      <div class="section-head"><span class="section-num">03</span><h2>Overview</h2></div>
+      <div class="panel">
+        <p>
+          The app is a small but complete online store. A shopper registers, logs in,
+          browses a product catalog (with search and category filters), adds items to
+          a cart, and checks out — which turns the cart into a permanent order. An
+          admin has a separate area to manage user accounts and the product catalog,
+          including pulling in sample products from a public API instead of typing
+          them by hand.
+        </p>
+        <p style="margin-bottom:0">
+          It's deliberately small: no payment gateway, no shipping logic, no
+          microservices — one Flask app, one SQLite file, plain HTML templates. That's
+          what makes it possible to trace <em>every</em> feature all the way down to a
+          test case, instead of just the interesting ones.
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. TECH STACK -->
+    <section id="techstack">
+      <div class="section-head"><span class="section-num">04</span><h2>Tech stack</h2></div>
+      <p class="intro">Deliberately short — five real dependencies, one of them already inside Python.</p>
+      <div class="tech-grid">
+        <div class="tech-card"><div class="name"><span class="dot"></span>Python 3.10+</div><p>The language everything else runs on.</p></div>
+        <div class="tech-card"><div class="name"><span class="dot"></span>Flask 3</div><p>Routes requests to Python functions and renders HTML.</p></div>
+        <div class="tech-card"><div class="name"><span class="dot"></span>Flask-SQLAlchemy</div><p>The ORM — Python classes in <code>models.py</code> instead of raw SQL.</p></div>
+        <div class="tech-card"><div class="name"><span class="dot"></span>Flask-Login</div><p>Session handling — who's logged in, on every request.</p></div>
+        <div class="tech-card"><div class="name"><span class="dot"></span>SQLite</div><p>The entire database is one file. Ships inside Python — nothing to install.</p></div>
+        <div class="tech-card"><div class="name"><span class="dot"></span>Jinja2 + Bootstrap 5</div><p>Server-rendered templates, styled via CDN — no frontend build step.</p></div>
+        <div class="tech-card"><div class="name"><span class="dot"></span>python-dotenv</div><p>Loads settings from <code>.env</code> — no secrets hardcoded.</p></div>
+        <div class="tech-card"><div class="name"><span class="dot"></span>requests</div><p>Calls dummyjson.com to sync sample products.</p></div>
+      </div>
+    </section>
+
+    <!-- 5. DESIGN -->
+    <section id="design">
+      <div class="section-head"><span class="section-num">05</span><h2>Design</h2></div>
+      <p class="intro">Three views of the same system: the classes in code, the tables in the database, and the path a person actually walks.</p>
+
+      <div class="diagram-card" id="diagram-class">
+        <h3>Class diagram</h3>
+        <div class="cap">The five classes in <code>models.py</code>, and how they reference each other.</div>
+        <pre class="mermaid">
+classDiagram
+    class User {
+        +int id
+        +string username
+        +string email
+        +string password_hash
+        +bool is_admin
+        +datetime created_at
+        +set_password(raw_password)
+        +check_password(raw_password) bool
+    }
+    class Product {
+        +int id
+        +int external_id
+        +string title
+        +string category
+        +decimal price
+        +int stock
+        +string thumbnail_url
+    }
+    class CartItem {
+        +int id
+        +int user_id
+        +int product_id
+        +int quantity
+        +datetime added_at
+    }
+    class Order {
+        +int id
+        +int user_id
+        +decimal total_amount
+        +string status
+        +datetime created_at
+    }
+    class OrderItem {
+        +int id
+        +int order_id
+        +int product_id
+        +int quantity
+        +decimal price_at_purchase
+    }
+    User "1" --&gt; "many" CartItem : owns
+    User "1" --&gt; "many" Order : places
+    CartItem "many" --&gt; "1" Product : refers to
+    Order "1" --&gt; "many" OrderItem : contains
+    OrderItem "many" --&gt; "1" Product : refers to
+        </pre>
+      </div>
+
+      <div class="diagram-card" id="diagram-er">
+        <h3>Entity diagram (ER)</h3>
+        <div class="cap">The same five ideas as they exist in <code>shopping_cart.db</code> — tables, primary keys, foreign keys.</div>
+        <pre class="mermaid">
+erDiagram
+    USERS ||--o{ CART_ITEMS : has
+    USERS ||--o{ ORDERS : places
+    PRODUCTS ||--o{ CART_ITEMS : "added as"
+    PRODUCTS ||--o{ ORDER_ITEMS : "sold as"
+    ORDERS ||--|{ ORDER_ITEMS : contains
+
+    USERS {
+        int id PK
+        string username
+        string email
+        string password_hash
+        bool is_admin
+    }
+    PRODUCTS {
+        int id PK
+        string title
+        string category
+        decimal price
+        int stock
+    }
+    CART_ITEMS {
+        int id PK
+        int user_id FK
+        int product_id FK
+        int quantity
+    }
+    ORDERS {
+        int id PK
+        int user_id FK
+        decimal total_amount
+        string status
+    }
+    ORDER_ITEMS {
+        int id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        decimal price_at_purchase
+    }
+        </pre>
+      </div>
+
+      <div class="diagram-card" id="diagram-flow">
+        <h3>Flow diagram — shopper journey</h3>
+        <div class="cap">The path from landing on the site to holding an order confirmation.</div>
+        <pre class="mermaid">
+flowchart TD
+    A[Land on the site] --> B{Have an account?}
+    B -- No --> C[Register]
+    C --> D[Log in]
+    B -- Yes --> D[Log in]
+    D --> E[Dashboard: browse / search / filter]
+    E --> F[Add product to cart]
+    F --> E
+    F --> G[Open cart]
+    G --> H{Cart empty?}
+    H -- Yes --> E
+    H -- No --> I[Checkout]
+    I --> J[Order + order items created, cart cleared]
+    J --> K[Order confirmation page]
+        </pre>
+      </div>
+
+      <div class="diagram-card" id="diagram-flow-admin" style="margin-bottom:0">
+        <h3>Flow diagram — admin journey</h3>
+        <div class="cap">What happens the moment <code>is_admin</code> matters.</div>
+        <pre class="mermaid">
+flowchart TD
+    A2[Log in] --> B2{is_admin?}
+    B2 -- No, but URL is /admin/... --> C2[403 Forbidden page]
+    B2 -- Yes --> D2[Admin: Users]
+    B2 -- Yes --> E2[Admin: Products]
+    D2 --> F2[Reset a user's password]
+    E2 --> G2[Add a product]
+    E2 --> H2{Product in a past order?}
+    H2 -- Yes --> I2[Blocked — cannot delete]
+    H2 -- No --> J2[Deleted]
+    E2 --> K2[Sync products from API]
+        </pre>
+      </div>
+    </section>
+
+    <!-- 6. FEATURES -->
+    <section id="features">
+      <div class="section-head"><span class="section-num">06</span><h2>Features</h2></div>
+      <p class="intro">Five things the app does. Every user story, use case and test case on this page belongs to one of these.</p>
+      <div class="feature-grid">
+
+        <div class="card" id="f1">
+          <div class="card-top"><h3>F1 — Registration &amp; Login</h3><span class="idchip">F1</span></div>
+          <p>A shopper creates an account, signs in, and signs out — the gate everything else sits behind.</p>
+          <div class="link-row"><span class="label">User stories</span>
+            <a class="pill" href="#us1">US1</a><a class="pill" href="#us2">US2</a><a class="pill" href="#us3">US3</a>
+          </div>
+          <div class="link-row"><span class="label">Use cases</span>
+            <a class="pill accent" href="#uc1">UC1</a><a class="pill accent" href="#uc2">UC2</a><a class="pill accent" href="#uc3">UC3</a>
+          </div>
+        </div>
+
+        <div class="card" id="f2">
+          <div class="card-top"><h3>F2 — Product Catalog</h3><span class="idchip">F2</span></div>
+          <p>Browse every product, or narrow it down with a search box and a category filter.</p>
+          <div class="link-row"><span class="label">User stories</span>
+            <a class="pill" href="#us4">US4</a><a class="pill" href="#us5">US5</a><a class="pill" href="#us6">US6</a>
+          </div>
+          <div class="link-row"><span class="label">Use cases</span>
+            <a class="pill accent" href="#uc4">UC4</a>
+          </div>
+        </div>
+
+        <div class="card" id="f3">
+          <div class="card-top"><h3>F3 — Cart &amp; Checkout</h3><span class="idchip">F3</span></div>
+          <p>Add items, adjust quantities, remove items, and turn the cart into a real order.</p>
+          <div class="link-row"><span class="label">User stories</span>
+            <a class="pill" href="#us7">US7</a><a class="pill" href="#us8">US8</a><a class="pill" href="#us9">US9</a>
+            <a class="pill" href="#us10">US10</a><a class="pill" href="#us11">US11</a>
+          </div>
+          <div class="link-row"><span class="label">Use cases</span>
+            <a class="pill accent" href="#uc5">UC5</a><a class="pill accent" href="#uc6">UC6</a>
+          </div>
+        </div>
+
+        <div class="card" id="f4">
+          <div class="card-top"><h3>F4 — Admin: Users</h3><span class="idchip">F4</span></div>
+          <p>An admin can see every account and reset a forgotten password directly.</p>
+          <div class="link-row"><span class="label">User stories</span>
+            <a class="pill" href="#us12">US12</a><a class="pill" href="#us13">US13</a>
+          </div>
+          <div class="link-row"><span class="label">Use cases</span>
+            <a class="pill accent" href="#uc7">UC7</a>
+          </div>
+        </div>
+
+        <div class="card" id="f5">
+          <div class="card-top"><h3>F5 — Admin: Products</h3><span class="idchip">F5</span></div>
+          <p>An admin manages the catalog: add products by hand, remove unused ones, or sync from an API.</p>
+          <div class="link-row"><span class="label">User stories</span>
+            <a class="pill" href="#us14">US14</a><a class="pill" href="#us15">US15</a><a class="pill" href="#us16">US16</a>
+          </div>
+          <div class="link-row"><span class="label">Use cases</span>
+            <a class="pill accent" href="#uc8">UC8</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. TRACEABILITY MATRIX -->
+    <section id="matrix">
+      <div class="section-head"><span class="section-num">07</span><h2>Traceability matrix</h2></div>
+      <p class="intro">The whole chain in one table. Click any ID to jump straight to its full definition.</p>
+      <div class="panel table-scroll">
+        <table class="matrix">
+          <thead>
+            <tr><th>Feature</th><th>User stories</th><th>Use case</th><th>Test cases</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat-name"><a class="pill" href="#f1">F1</a> Registration &amp; Login</td>
+              <td><a class="pill" href="#us1">US1</a> <a class="pill" href="#us2">US2</a> <a class="pill" href="#us3">US3</a></td>
+              <td><a class="pill accent" href="#uc1">UC1</a> <a class="pill accent" href="#uc2">UC2</a> <a class="pill accent" href="#uc3">UC3</a></td>
+              <td><a class="pill" href="#tc1">TC01</a> <a class="pill" href="#tc2">TC02</a> <a class="pill" href="#tc3">TC03</a> <a class="pill" href="#tc4">TC04</a> <a class="pill" href="#tc5">TC05</a> <a class="pill" href="#tc6">TC06</a> <a class="pill" href="#tc7">TC07</a></td>
+            </tr>
+            <tr>
+              <td class="feat-name"><a class="pill" href="#f2">F2</a> Product Catalog</td>
+              <td><a class="pill" href="#us4">US4</a> <a class="pill" href="#us5">US5</a> <a class="pill" href="#us6">US6</a></td>
+              <td><a class="pill accent" href="#uc4">UC4</a></td>
+              <td><a class="pill" href="#tc8">TC08</a> <a class="pill" href="#tc9">TC09</a></td>
+            </tr>
+            <tr>
+              <td class="feat-name"><a class="pill" href="#f3">F3</a> Cart &amp; Checkout</td>
+              <td><a class="pill" href="#us7">US7</a> <a class="pill" href="#us8">US8</a> <a class="pill" href="#us9">US9</a> <a class="pill" href="#us10">US10</a> <a class="pill" href="#us11">US11</a></td>
+              <td><a class="pill accent" href="#uc5">UC5</a> <a class="pill accent" href="#uc6">UC6</a></td>
+              <td><a class="pill" href="#tc10">TC10</a> <a class="pill" href="#tc11">TC11</a> <a class="pill" href="#tc12">TC12</a> <a class="pill" href="#tc13">TC13</a> <a class="pill" href="#tc14">TC14</a> <a class="pill" href="#tc15">TC15</a> <a class="pill" href="#tc16">TC16</a></td>
+            </tr>
+            <tr>
+              <td class="feat-name"><a class="pill" href="#f4">F4</a> Admin: Users</td>
+              <td><a class="pill" href="#us12">US12</a> <a class="pill" href="#us13">US13</a></td>
+              <td><a class="pill accent" href="#uc7">UC7</a></td>
+              <td><a class="pill" href="#tc17">TC17</a> <a class="pill" href="#tc18">TC18</a></td>
+            </tr>
+            <tr>
+              <td class="feat-name"><a class="pill" href="#f5">F5</a> Admin: Products</td>
+              <td><a class="pill" href="#us14">US14</a> <a class="pill" href="#us15">US15</a> <a class="pill" href="#us16">US16</a></td>
+              <td><a class="pill accent" href="#uc8">UC8</a></td>
+              <td><a class="pill" href="#tc19">TC19</a> <a class="pill" href="#tc20">TC20</a> <a class="pill" href="#tc21">TC21</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 8. USER STORIES -->
+    <section id="stories">
+      <div class="section-head"><span class="section-num">08</span><h2>User stories</h2></div>
+      <p class="intro">Each feature, told from the person's side: who they are, what they want, and why.</p>
+
+      <div class="story-group">
+        <div class="group-head"><h4>F1 · Registration &amp; Login</h4><a class="pill" href="#f1">F1</a></div>
+        <ul class="stories">
+          <li id="us1"><span class="idchip">US1</span> <p><span class="story-role">As a</span> new student, <span class="story-role">I want</span> to create an account, <span class="story-role">so that</span> I have my own cart and order history. — <a href="#uc1">UC1</a></p></li>
+          <li id="us2"><span class="idchip">US2</span> <p><span class="story-role">As a</span> returning shopper, <span class="story-role">I want</span> to log in with my username and password, <span class="story-role">so that</span> I can get back to my account. — <a href="#uc2">UC2</a></p></li>
+          <li id="us3"><span class="idchip">US3</span> <p><span class="story-role">As a</span> logged-in user, <span class="story-role">I want</span> to log out, <span class="story-role">so that</span> my account stays safe on a shared computer. — <a href="#uc3">UC3</a></p></li>
+        </ul>
+      </div>
+
+      <div class="story-group">
+        <div class="group-head"><h4>F2 · Product Catalog</h4><a class="pill" href="#f2">F2</a></div>
+        <ul class="stories">
+          <li id="us4"><span class="idchip">US4</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to browse all available products, <span class="story-role">so that</span> I can see what's for sale. — <a href="#uc4">UC4</a></p></li>
+          <li id="us5"><span class="idchip">US5</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to search products by name, <span class="story-role">so that</span> I can find something specific quickly. — <a href="#uc4">UC4</a></p></li>
+          <li id="us6"><span class="idchip">US6</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to filter products by category, <span class="story-role">so that</span> I can narrow down my choices. — <a href="#uc4">UC4</a></p></li>
+        </ul>
+      </div>
+
+      <div class="story-group">
+        <div class="group-head"><h4>F3 · Cart &amp; Checkout</h4><a class="pill" href="#f3">F3</a></div>
+        <ul class="stories">
+          <li id="us7"><span class="idchip">US7</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to add a product to my cart, <span class="story-role">so that</span> I can buy it later. — <a href="#uc5">UC5</a></p></li>
+          <li id="us8"><span class="idchip">US8</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to change the quantity of an item in my cart, <span class="story-role">so that</span> I buy exactly how many I need. — <a href="#uc5">UC5</a></p></li>
+          <li id="us9"><span class="idchip">US9</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to remove an item from my cart, <span class="story-role">so that</span> I don't buy something I changed my mind about. — <a href="#uc5">UC5</a></p></li>
+          <li id="us10"><span class="idchip">US10</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to check out my cart, <span class="story-role">so that</span> my order is placed and saved. — <a href="#uc6">UC6</a></p></li>
+          <li id="us11"><span class="idchip">US11</span> <p><span class="story-role">As a</span> shopper, <span class="story-role">I want</span> to see an order confirmation, <span class="story-role">so that</span> I know my purchase went through. — <a href="#uc6">UC6</a></p></li>
+        </ul>
+      </div>
+
+      <div class="story-group">
+        <div class="group-head"><h4>F4 · Admin: Users</h4><a class="pill" href="#f4">F4</a></div>
+        <ul class="stories">
+          <li id="us12"><span class="idchip">US12</span> <p><span class="story-role">As an</span> admin, <span class="story-role">I want</span> to see every registered user, <span class="story-role">so that</span> I know who's using the app. — <a href="#uc7">UC7</a></p></li>
+          <li id="us13"><span class="idchip">US13</span> <p><span class="story-role">As an</span> admin, <span class="story-role">I want</span> to reset a user's password, <span class="story-role">so that</span> I can help someone who's locked out. — <a href="#uc7">UC7</a></p></li>
+        </ul>
+      </div>
+
+      <div class="story-group">
+        <div class="group-head"><h4>F5 · Admin: Products</h4><a class="pill" href="#f5">F5</a></div>
+        <ul class="stories">
+          <li id="us14"><span class="idchip">US14</span> <p><span class="story-role">As an</span> admin, <span class="story-role">I want</span> to add a new product, <span class="story-role">so that</span> shoppers can buy it. — <a href="#uc8">UC8</a></p></li>
+          <li id="us15"><span class="idchip">US15</span> <p><span class="story-role">As an</span> admin, <span class="story-role">I want</span> to delete a product that's never been ordered, <span class="story-role">so that</span> I can keep the catalog clean. — <a href="#uc8">UC8</a></p></li>
+          <li id="us16"><span class="idchip">US16</span> <p><span class="story-role">As an</span> admin, <span class="story-role">I want</span> to sync products from an external API, <span class="story-role">so that</span> I don't have to type them all in by hand. — <a href="#uc8">UC8</a></p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9. USE CASES -->
+    <section id="usecases">
+      <div class="section-head"><span class="section-num">09</span><h2>Use cases</h2></div>
+      <p class="intro">How the system actually behaves, step by step, for each group of stories. Click a row to expand it.</p>
+
+      <details class="uc-card" id="uc1">
+        <summary><span class="uc-title"><span class="idchip">UC1</span> Register account</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Guest (not logged in)</span><span><strong>Precondition:</strong> visitor is on the Register page</span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>Visitor enters username, email, password and confirm-password.</li>
+            <li>System checks: all fields filled, password ≥ 8 characters, password matches confirm, username not already taken, email not already taken.</li>
+            <li>System hashes the password and creates the user record.</li>
+            <li>System redirects to Login with a success message.</li>
+          </ol>
+          <h5>Alternate flow</h5>
+          <p>Any failed check re-shows the Register form with a specific error message; no account is created.</p>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f1">F1</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us1">US1</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc1">TC01</a><a class="pill" href="#tc2">TC02</a><a class="pill" href="#tc3">TC03</a><a class="pill" href="#tc4">TC04</a></div>
+        </div>
+      </details>
+
+      <details class="uc-card" id="uc2">
+        <summary><span class="uc-title"><span class="idchip">UC2</span> Log in</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Registered user</span><span><strong>Precondition:</strong> user has an account</span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>User submits username and password.</li>
+            <li>System looks up the user and checks the password hash.</li>
+            <li>On match, a session starts and the user is redirected to the Dashboard.</li>
+          </ol>
+          <h5>Alternate flow</h5>
+          <p>On a wrong username or password, the system shows "Invalid username or password" — deliberately not saying which one was wrong.</p>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f1">F1</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us2">US2</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc5">TC05</a><a class="pill" href="#tc6">TC06</a></div>
+        </div>
+      </details>
+
+      <details class="uc-card" id="uc3">
+        <summary><span class="uc-title"><span class="idchip">UC3</span> Log out</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Logged-in user</span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>User clicks Logout.</li>
+            <li>System clears the session and redirects to Login.</li>
+          </ol>
+          <h5>Postcondition</h5>
+          <p>Visiting any page that requires login now redirects back to Login.</p>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f1">F1</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us3">US3</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc7">TC07</a></div>
+        </div>
+      </details>
+
+      <details class="uc-card" id="uc4">
+        <summary><span class="uc-title"><span class="idchip">UC4</span> Browse &amp; search products</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Logged-in shopper</span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>Dashboard loads every product, sorted by title.</li>
+            <li>Shopper types a keyword; the system filters titles (case-insensitive, partial match).</li>
+            <li>Shopper picks a category; the system narrows the list to that category.</li>
+            <li>The filtered grid re-renders — search and category can combine.</li>
+          </ol>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f2">F2</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us4">US4</a><a class="pill" href="#us5">US5</a><a class="pill" href="#us6">US6</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc8">TC08</a><a class="pill" href="#tc9">TC09</a></div>
+        </div>
+      </details>
+
+      <details class="uc-card" id="uc5">
+        <summary><span class="uc-title"><span class="idchip">UC5</span> Manage cart</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Logged-in shopper</span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>Shopper clicks "Add to cart" on a product with a chosen quantity.</li>
+            <li>If that product is already in the cart, its quantity increases instead of creating a duplicate row (a database constraint enforces one row per user/product).</li>
+            <li>On the Cart page, shopper edits a line's quantity — setting it to 0 deletes the line.</li>
+            <li>Shopper removes a line directly with "Remove."</li>
+          </ol>
+          <h5>Alternate flow</h5>
+          <p>Trying to update or remove a cart line that belongs to a different user is blocked with "You cannot modify another user's cart."</p>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f3">F3</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us7">US7</a><a class="pill" href="#us8">US8</a><a class="pill" href="#us9">US9</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc10">TC10</a><a class="pill" href="#tc11">TC11</a><a class="pill" href="#tc12">TC12</a><a class="pill" href="#tc13">TC13</a></div>
+        </div>
+      </details>
+
+      <details class="uc-card" id="uc6">
+        <summary><span class="uc-title"><span class="idchip">UC6</span> Checkout</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Logged-in shopper</span><span><strong>Precondition:</strong> cart has at least one item</span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>Shopper clicks Checkout.</li>
+            <li>System totals the cart, creates an Order (status "placed"), and copies each cart line into an OrderItem — locking in today's price.</li>
+            <li>System deletes the checked-out cart lines.</li>
+            <li>System redirects to an Order Confirmation page.</li>
+          </ol>
+          <h5>Alternate flow</h5>
+          <p>Checking out an empty cart shows a warning and creates nothing. Opening someone else's order-confirmation link is blocked and redirected to the Dashboard.</p>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f3">F3</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us10">US10</a><a class="pill" href="#us11">US11</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc14">TC14</a><a class="pill" href="#tc15">TC15</a><a class="pill" href="#tc16">TC16</a></div>
+        </div>
+      </details>
+
+      <details class="uc-card" id="uc7">
+        <summary><span class="uc-title"><span class="idchip">UC7</span> Manage users (admin)</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Admin</span><span><strong>Precondition:</strong> logged in with <code>is_admin = true</code></span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>Admin opens Admin → Users and sees every registered user, newest first.</li>
+            <li>Admin enters a new password (≥ 8 characters) for a chosen user.</li>
+            <li>System hashes and saves it; that user can log in with it immediately.</li>
+          </ol>
+          <h5>Alternate flow</h5>
+          <p>Any non-admin who requests an <code>/admin/...</code> URL gets a 403 Forbidden page instead of the content.</p>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f4">F4</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us12">US12</a><a class="pill" href="#us13">US13</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc17">TC17</a><a class="pill" href="#tc18">TC18</a></div>
+        </div>
+      </details>
+
+      <details class="uc-card" id="uc8">
+        <summary><span class="uc-title"><span class="idchip">UC8</span> Manage products (admin)</span><span class="chev">▶</span></summary>
+        <div class="uc-body">
+          <div class="uc-meta"><span><strong>Actor:</strong> Admin</span></div>
+          <h5>Main flow</h5>
+          <ol>
+            <li>Admin opens Admin → Products and sees the full catalog.</li>
+            <li>Admin adds a product by entering a title, price, stock, category, description and thumbnail URL.</li>
+            <li>Admin deletes a product that has never appeared in a placed order.</li>
+            <li>Admin syncs the catalog from dummyjson.com to bulk-add sample products.</li>
+          </ol>
+          <h5>Alternate flow</h5>
+          <p>Deleting a product that already appears in someone's order history is blocked, so past orders always stay intact.</p>
+          <div class="link-row"><span class="label">Feature</span><a class="pill" href="#f5">F5</a></div>
+          <div class="link-row"><span class="label">User stories</span><a class="pill" href="#us14">US14</a><a class="pill" href="#us15">US15</a><a class="pill" href="#us16">US16</a></div>
+          <div class="link-row"><span class="label">Test cases</span><a class="pill" href="#tc19">TC19</a><a class="pill" href="#tc20">TC20</a><a class="pill" href="#tc21">TC21</a></div>
+        </div>
+      </details>
+    </section>
+
+    <!-- 10. TEST CASES -->
+    <section id="testcases">
+      <div class="section-head"><span class="section-num">10</span><h2>Test cases</h2></div>
+      <p class="intro">The concrete, checkable proof that each use case actually works — grouped the same way, and linked back up.</p>
+
+      <div class="tc-group-title"><h4>UC1 — Register account</h4><a class="pill accent" href="#uc1">UC1</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc1"><td>TC01</td><td>Valid registration</td><td>Fill username, unique email, an 8+ char password, matching confirm.</td><td>Account created; redirected to Login with a success message.</td></tr>
+            <tr id="tc2"><td>TC02</td><td>Password too short</td><td>Submit a 5-character password.</td><td>"Password must be at least 8 characters." Form re-shown, no account created.</td></tr>
+            <tr id="tc3"><td>TC03</td><td>Passwords don't match</td><td>Password and confirm-password differ.</td><td>"Passwords do not match." No account created.</td></tr>
+            <tr id="tc4"><td>TC04</td><td>Username already taken</td><td>Register with a username that already exists.</td><td>"That username is already taken." No account created.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tc-group-title"><h4>UC2 — Log in</h4><a class="pill accent" href="#uc2">UC2</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc5"><td>TC05</td><td>Valid login</td><td>Submit the correct username and password.</td><td>Redirected to the Dashboard, logged in.</td></tr>
+            <tr id="tc6"><td>TC06</td><td>Wrong password</td><td>Submit a valid username with an incorrect password.</td><td>"Invalid username or password." Stays on Login.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tc-group-title"><h4>UC3 — Log out</h4><a class="pill accent" href="#uc3">UC3</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc7"><td>TC07</td><td>Logout clears session</td><td>While logged in, click Logout, then try to open <code>/dashboard</code>.</td><td>Redirected to Login — the session no longer counts as logged in.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tc-group-title"><h4>UC4 — Browse &amp; search products</h4><a class="pill accent" href="#uc4">UC4</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc8"><td>TC08</td><td>Search by keyword</td><td>Type part of a product title, in any letter case, into the search box.</td><td>Only products whose title contains that text are shown.</td></tr>
+            <tr id="tc9"><td>TC09</td><td>Filter by category</td><td>Select a category from the dropdown.</td><td>Only products in that category are shown; combining with a search keyword narrows further.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tc-group-title"><h4>UC5 — Manage cart</h4><a class="pill accent" href="#uc5">UC5</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc10"><td>TC10</td><td>Add new item</td><td>Add a product that isn't already in the cart.</td><td>Cart shows one line, quantity 1, success message.</td></tr>
+            <tr id="tc11"><td>TC11</td><td>Add same item again</td><td>Add the same product a second time.</td><td>Quantity on the existing line increases — no duplicate line appears.</td></tr>
+            <tr id="tc12"><td>TC12</td><td>Quantity set to zero</td><td>Edit a cart line's quantity to 0 and save.</td><td>The line is removed from the cart.</td></tr>
+            <tr id="tc13"><td>TC13</td><td>Remove line directly</td><td>Click "Remove" on a cart line.</td><td>The line disappears; the cart total updates.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tc-group-title"><h4>UC6 — Checkout</h4><a class="pill accent" href="#uc6">UC6</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc14"><td>TC14</td><td>Checkout with items</td><td>Add items, go to Cart, click Checkout.</td><td>An order is created, the cart is emptied, and the shopper lands on the order confirmation page with an order number.</td></tr>
+            <tr id="tc15"><td>TC15</td><td>Checkout empty cart</td><td>With an empty cart, request Checkout directly.</td><td>"Your cart is empty." No order is created.</td></tr>
+            <tr id="tc16"><td>TC16</td><td>View another shopper's order</td><td>Log in as User A, open User B's order-confirmation URL by ID.</td><td>Blocked with "You cannot view another user's order," redirected to Dashboard.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tc-group-title"><h4>UC7 — Manage users (admin)</h4><a class="pill accent" href="#uc7">UC7</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc17"><td>TC17</td><td>Non-admin blocked</td><td>Log in as a regular user, open <code>/admin/users</code>.</td><td>403 Forbidden page — the admin area never renders.</td></tr>
+            <tr id="tc18"><td>TC18</td><td>Admin resets a password</td><td>As admin, set a new 8+ character password for a user.</td><td>Success message; that user can immediately log in with the new password.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tc-group-title"><h4>UC8 — Manage products (admin)</h4><a class="pill accent" href="#uc8">UC8</a></div>
+      <div class="table-scroll panel">
+        <table class="tc">
+          <thead><tr><th>ID</th><th>Scenario</th><th>Steps</th><th>Expected result</th></tr></thead>
+          <tbody>
+            <tr id="tc19"><td>TC19</td><td>Add a product</td><td>Fill in title and price (required) and submit.</td><td>Product appears in the catalog and on the shopper Dashboard immediately.</td></tr>
+            <tr id="tc20"><td>TC20</td><td>Delete a product in an order</td><td>Try to delete a product that appears in a past order.</td><td>Blocked with an error message; the product and the past order are unchanged.</td></tr>
+            <tr id="tc21"><td>TC21</td><td>Sync from API</td><td>Click "Sync products."</td><td>New products are added from dummyjson.com; a message shows how many were synced.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="legend" style="margin-top:24px">
+        <span><span class="sw" style="background:var(--primary-tint); border:1px solid var(--border)"></span> Feature / User story</span>
+        <span><span class="sw" style="background:var(--accent-tint)"></span> Use case</span>
+        <span><span class="sw" style="background:var(--chip-bg); border:1px solid var(--border)"></span> Test case</span>
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    Grounded in the actual project code — <code>models.py</code> and <code>routes/</code> in
+    <code>python/shoppingCart/</code>. See <code>README.md</code> and <code>COURSE_PLAN.md</code> in that
+    folder for setup and the session-by-session build order.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+</script>
+</body>
+</html>

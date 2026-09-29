@@ -5,6 +5,12 @@ for a 5–6 session / ~12-hour Flask course. The full curriculum (what to build
 each session, in what order, with clear session boundaries) is in
 [`COURSE_PLAN.md`](./COURSE_PLAN.md). This README covers setup only.
 
+> **New to the project?** Open [`PROJECT_BLUEPRINT.html`](./PROJECT_BLUEPRINT.html)
+> in a browser first — a single page walking problem statement → goal →
+> design (class/entity/flow diagrams) → features → user stories → use cases →
+> test cases, every ID cross-linked so you can trace any feature down to the
+> test that proves it works. Download it or open it straight from the repo.
+
 > **On Windows?** Follow [`SETUP_WINDOWS.md`](./SETUP_WINDOWS.md) instead of
 > the setup steps below. The commands here are macOS/Linux; several of them
 > (`cp`, `source`, `<` redirection) do not work in PowerShell.
