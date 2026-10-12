@@ -57,7 +57,7 @@ got saved to the claims table, or clearing test data).
 --------------------------------------------------------------------
 3. Set up the Python environment
 --------------------------------------------------------------------
-    cd python/insuranceAI
+    cd insuranceAI
     python -m venv venv
     source venv/bin/activate        (Windows: venv\Scripts\activate)
     pip install -r requirements.txt

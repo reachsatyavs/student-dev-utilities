@@ -9,7 +9,8 @@ each session, in what order, with clear session boundaries) is in
 > in a browser first — a single page walking problem statement → goal →
 > design (class/entity/flow diagrams) → features → user stories → use cases →
 > test cases, every ID cross-linked so you can trace any feature down to the
-> test that proves it works. Download it or open it straight from the repo.
+> test that proves it works. View it live at
+> [reachsatyavs.github.io/student-dev-utilities/shoppingCart/PROJECT_BLUEPRINT.html](https://reachsatyavs.github.io/student-dev-utilities/shoppingCart/PROJECT_BLUEPRINT.html).
 
 > **On Windows?** Follow [`SETUP_WINDOWS.md`](./SETUP_WINDOWS.md) instead of
 > the setup steps below. The commands here are macOS/Linux; several of them
@@ -114,7 +115,7 @@ opens a `.db` file and lets you browse tables, run queries, and edit rows.
 ## 3. Install Python packages
 
 ```bash
-cd python/shoppingCart
+cd shoppingCart
 python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt

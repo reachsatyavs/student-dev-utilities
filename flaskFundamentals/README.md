@@ -13,7 +13,7 @@ just Python, one installed package, and a first web page.
 2. (Recommended) create a virtual environment so the packages you install
    here don't spill into every other project on your machine:
    ```bash
-   cd python/flaskFundamentals
+   cd flaskFundamentals
    python3 -m venv .venv
    source .venv/bin/activate      # Windows: .venv\Scripts\activate
    ```

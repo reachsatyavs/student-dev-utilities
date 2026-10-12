@@ -3,7 +3,7 @@
 6 sessions × 2 hours = 12 hours hands-on. Each session ends with something
 that **runs**, so a student who only shows up for some sessions still leaves
 with a working app at their level. The finished reference implementation for
-every session lives in this folder (`python/shoppingCart/`) — use it as your
+every session lives in this folder (`shoppingCart/`) — use it as your
 instructor answer key and to generate diffs/handouts, not as something
 students clone on day 1.
 
