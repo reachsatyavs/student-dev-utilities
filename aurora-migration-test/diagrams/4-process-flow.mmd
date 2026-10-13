@@ -1,0 +1,46 @@
+flowchart TD
+  S(["Start: Test rehearsal"]) --> P0
+  P0["0. Prerequisites and approvals<br/>MySQL version, CIDRs, tooling versions, change window<br/><i>All teams</i>"] --> P1
+  P1["1. Create Test-Prod and Test-DR accounts, IAM, quotas<br/><i>Cloud governance, Security</i>"] --> P2
+  P2["2. Bootstrap EKS in both accounts,<br/>deploy the app on MySQL, seed test data<br/><i>Platform, App</i>"] --> P3
+  P3["3. Create Aurora cluster in same VPC<br/>subnet group, SG, parameter groups<br/><i>Aurora DBA, Network</i>"] --> P4
+  P4["4. Sync: repl user, internal NLB, dump + load,<br/>app user, start binlog replication<br/><i>MySQL DBA, Aurora DBA, Platform</i>"] --> G1
+  G1{"Replica running,<br/>lag near 0, test writes<br/>visible on Aurora?"}
+  G1 -- "No" --> F1["Troubleshoot network,<br/>binlog, credentials"] --> P4
+  G1 -- "Yes" --> D0
+
+  subgraph DT["DOWNTIME WINDOW"]
+    D0["5.1 Record replicas, scale the app to 0<br/><i>App, Platform</i>"] --> D1
+    D1["5.2 Source super_read_only = ON,<br/>binlog position matches on Aurora<br/><i>MySQL DBA, Aurora DBA</i>"] --> G2
+    G2{"5.3 Row counts and<br/>checksums match?"}
+    G2 -- "Yes" --> D2["5.4 Stop and reset replication,<br/>Aurora writable<br/><i>Aurora DBA</i>"] --> D3
+    D3["6.1-6.2 Back up the DB secret<br/>and point it at Aurora<br/><i>Platform</i>"] --> D4
+    D4["6.3 Scale the app back up<br/><i>App, Platform</i>"] --> G3
+    G3{"6.4 Smoke test:<br/>API, admin, orders OK?"}
+  end
+
+  G2 -- "No" --> RB1["Rollback A: source read/write,<br/>scale app up on MySQL"]
+  G3 -- "No" --> RB2["Rollback B: restore secret backup,<br/>source read/write, scale app up"]
+  G3 -- "Yes" --> P7
+
+  P7["7. Create global cluster, DR VPC,<br/>add eu-west-2 secondary (online)<br/><i>Aurora DBA, Network</i>"] --> G4
+  G4{"Replication lag<br/>stable and low?"}
+  G4 -- "No" --> F4["Check instance size,<br/>write load, KMS"] --> P7
+  G4 -- "Yes" --> P8
+  P8["8. Cross-account VPC peering, routes,<br/>SG, DNS, connectivity test from DR EKS<br/><i>Network, Security, Platform</i>"] --> P9
+  P9["9. Switchover drill to London,<br/>DR app up, validate, failback<br/><i>All teams</i>"] --> G5
+  G5{"Drill passed,<br/>RTO/RPO recorded?"}
+  G5 -- "No" --> F5["Fix gaps,<br/>repeat drill"] --> P9
+  G5 -- "Yes" --> E(["Sign-off: write Prod change plan<br/>(Prod is already Aurora: steps 7 to 9 + DMS retirement)"])
+
+  classDef phase fill:#E8F1FF,stroke:#3B6FB6,color:#1A2B4A
+  classDef gate fill:#FFF8DB,stroke:#B38F00,color:#3D3000
+  classDef down fill:#FDECEC,stroke:#C0392B,color:#4A1010
+  classDef rb fill:#F2F2F2,stroke:#888,color:#333
+  classDef term fill:#E9F7EF,stroke:#2E8B57,color:#123D24
+  class P0,P1,P2,P3,P4,P7,P8,P9 phase
+  class G1,G2,G3,G4,G5 gate
+  class D0,D1,D2,D3,D4 down
+  class RB1,RB2,F1,F4,F5 rb
+  class S,E term
+  style DT fill:#FFF5F5,stroke:#C0392B,stroke-width:2px

@@ -1,0 +1,47 @@
+digraph N {
+  graph [rankdir=LR, fontname="Helvetica", pad=0.4, nodesep=0.4, ranksep=0.8, newrank=true, label="Test environment: network view (ports, security groups, routes)", labelloc=t, fontsize=18];
+  node  [fontname="Helvetica", fontsize=12, style="filled,rounded", shape=box, margin="0.16,0.08"];
+  edge  [fontname="Helvetica", fontsize=11, color="#4A5568"];
+
+  subgraph cluster_a {
+    label="Test-Prod account | eu-west-1"; style="rounded"; color="#5B7DB1"; penwidth=2;
+    subgraph cluster_va {
+      label="EKS VPC 10.100.0.0/16"; style="rounded,filled"; fillcolor="#F7F9FC"; color="#A0AEC0";
+      N1  [label="EKS nodes / pods\nprivate subnets", fillcolor="#EEF3FB", color="#5B7DB1"];
+      MY  [label="MySQL pod :3306\n(source)", shape=cylinder, fillcolor="#FFF4E5", color="#C77700"];
+      NLB [label="Internal NLB\nmysql-repl-nlb :3306\n(migration only)", style="filled,rounded,dashed", fillcolor="#FFF4E5", color="#C77700"];
+      SGA [label="SG test-aurora-sg\nin: tcp 3306 from 10.100.0.0/16", shape=hexagon, fillcolor="#FFF8DB", color="#B38F00"];
+      AU  [label="Aurora primary\nprivate DB subnets", shape=cylinder, fillcolor="#E9F7EF", color="#2E8B57"];
+    }
+  }
+
+  subgraph cluster_b {
+    label="Test-Prod account | eu-west-2"; style="rounded"; color="#5B7DB1"; penwidth=2;
+    subgraph cluster_vb {
+      label="Aurora DR VPC 10.110.0.0/16"; style="rounded,filled"; fillcolor="#F7F9FC"; color="#A0AEC0";
+      RT2 [label="DB subnet route table\n10.101.0.0/16 -> pcx", fillcolor="#F3E8FF", color="#7B4FB3"];
+      SGB [label="SG test-aurora-dr-sg\nin: tcp 3306 from 10.101.0.0/16", shape=hexagon, fillcolor="#FFF8DB", color="#B38F00"];
+      AS  [label="Aurora secondary\n3 private subnets /24", shape=cylinder, fillcolor="#E9F7EF", color="#2E8B57"];
+    }
+  }
+
+  PCX [label="VPC peering pcx\nrequester: Test-Prod\naccepter: Test-DR\nDNS resolution enabled", shape=hexagon, style=filled, fillcolor="#F3E8FF", color="#7B4FB3"];
+
+  subgraph cluster_c {
+    label="Test-DR account | eu-west-2"; style="rounded"; color="#7B4FB3"; penwidth=2;
+    subgraph cluster_vc {
+      label="DR EKS VPC 10.101.0.0/16"; style="rounded,filled"; fillcolor="#F7F9FC"; color="#A0AEC0";
+      N3  [label="DR EKS nodes / pods", fillcolor="#EEF3FB", color="#5B7DB1"];
+      RT3 [label="Private route tables\n10.110.0.0/16 -> pcx", fillcolor="#F3E8FF", color="#7B4FB3"];
+    }
+  }
+
+  N1 -> SGA [label="(1) app JDBC :3306"];
+  SGA -> AU;
+  AU -> NLB [label="(2) binlog pull :3306\nmigration only", style=dashed, color="#C77700"];
+  NLB -> MY [style=dashed, color="#C77700"];
+  AU -> AS [label="(3) Global DB replication\nAWS backbone, no peering needed", penwidth=3, color="#2E8B57"];
+  N3 -> RT3 [label="(4) JDBC :3306"];
+  RT3 -> PCX -> RT2 -> SGB -> AS;
+  {rank=same; AU; NLB}
+}

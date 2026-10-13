@@ -1,0 +1,60 @@
+digraph G {
+  graph [rankdir=LR, fontname="Helvetica", fontsize=13, pad=0.4, nodesep=0.45, ranksep=0.9, newrank=true, label="Test environment: target architecture (after migration)", labelloc=t, fontsize=18];
+  node  [fontname="Helvetica", fontsize=12, style="filled,rounded", shape=box, margin="0.18,0.10"];
+  edge  [fontname="Helvetica", fontsize=11, color="#4A5568"];
+
+  subgraph cluster_tp {
+    label="Test-Prod AWS account"; style="rounded"; color="#5B7DB1"; penwidth=2; fontsize=15;
+    subgraph cluster_ie {
+      label="eu-west-1 (Ireland)"; style="rounded,dashed"; color="#8A99B3";
+      subgraph cluster_v1 {
+        label="Test-Prod EKS VPC 10.100.0.0/16"; style="rounded,filled"; fillcolor="#F7F9FC"; color="#A0AEC0";
+        subgraph cluster_k1 {
+          label="EKS cluster"; style="rounded,filled"; fillcolor="#FFFFFF"; color="#A0AEC0";
+          C1 [label="App stack\napi, admin, batch,\nintegration, search", fillcolor="#E8F1FF", color="#3B6FB6"];
+          Q1 [label="ActiveMQ", fillcolor="#E8F1FF", color="#3B6FB6"];
+          J1 [label="CI/CD, registry", fillcolor="#E8F1FF", color="#3B6FB6"];
+          OLD [label="Old MySQL container\nkept as fallback,\nremoved after sign-off", shape=cylinder, style="filled,dashed", fillcolor="#FFF4E5", color="#C77700"];
+        }
+        subgraph cluster_db1 {
+          label="Private DB subnets"; style="rounded,filled"; fillcolor="#FFFFFF"; color="#A0AEC0";
+          AW [label="Aurora PRIMARY\nwriter (AZ a)", shape=cylinder, fillcolor="#E9F7EF", color="#2E8B57"];
+          AR [label="Aurora reader\n(AZ b)", shape=cylinder, fillcolor="#E9F7EF", color="#2E8B57"];
+        }
+      }
+    }
+    subgraph cluster_ldn {
+      label="eu-west-2 (London)"; style="rounded,dashed"; color="#8A99B3";
+      subgraph cluster_v2 {
+        label="Aurora DR VPC 10.110.0.0/16"; style="rounded,filled"; fillcolor="#F7F9FC"; color="#A0AEC0";
+        SW [label="Aurora SECONDARY\ninstance 1\n(read-only until switchover)", shape=cylinder, fillcolor="#E9F7EF", color="#2E8B57"];
+        SR [label="Aurora SECONDARY\ninstance 2", shape=cylinder, fillcolor="#E9F7EF", color="#2E8B57"];
+      }
+    }
+  }
+
+  PCX [label="VPC peering (pcx)\ncross-account\n10.101/16 <-> 10.110/16", shape=hexagon, style=filled, fillcolor="#F3E8FF", color="#7B4FB3"];
+
+  subgraph cluster_td {
+    label="Test-DR AWS account"; style="rounded"; color="#7B4FB3"; penwidth=2; fontsize=15;
+    subgraph cluster_ldn2 {
+      label="eu-west-2 (London)"; style="rounded,dashed"; color="#8A99B3";
+      subgraph cluster_v3 {
+        label="Test-DR EKS VPC 10.101.0.0/16"; style="rounded,filled"; fillcolor="#F7F9FC"; color="#A0AEC0";
+        subgraph cluster_k2 {
+          label="DR EKS cluster"; style="rounded,filled"; fillcolor="#FFFFFF"; color="#A0AEC0";
+          C2 [label="DR app stack\nstandby, scaled to 0", style="filled,rounded,dashed", fillcolor="#F2F2F2", color="#888888"];
+          Q2 [label="ActiveMQ", fillcolor="#E8F1FF", color="#3B6FB6"];
+        }
+      }
+    }
+  }
+
+  C1 -> AW [label="JDBC 3306\ncluster endpoint"];
+  AW -> AR [dir=none, style=dotted, label="in-region HA"];
+  AW -> SW [label="Aurora Global Database\nreplication (AWS managed)", penwidth=3, color="#2E8B57"];
+  SW -> SR [dir=none, style=dotted];
+  C2 -> PCX [style=dashed, label="JDBC 3306"];
+  PCX -> SW [style=dashed, label="secondary cluster endpoint\nwritable only after switchover"];
+  {rank=same; C1; Q1; J1; OLD}
+}

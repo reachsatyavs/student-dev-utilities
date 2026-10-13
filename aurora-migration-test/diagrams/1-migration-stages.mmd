@@ -1,0 +1,47 @@
+flowchart LR
+  subgraph S1["Stage 1: Today (Test)"]
+    direction TB
+    A1["App stack<br/>(Test-Prod EKS, eu-west-1)"]
+    M1[("MySQL 8.0 container<br/>PRIMARY, read/write")]
+    A1 -->|"reads + writes"| M1
+  end
+
+  subgraph S2["Stage 2: Sync (no downtime)"]
+    direction TB
+    A2["App stack<br/>(unchanged)"]
+    M2[("MySQL container<br/>PRIMARY, read/write")]
+    R2[("Aurora MySQL 3<br/>REPLICA, read-only<br/>same VPC, eu-west-1")]
+    A2 -->|"reads + writes"| M2
+    M2 -->|"binlog replication<br/>via temporary internal NLB"| R2
+  end
+
+  subgraph S3["Stage 3: Cutover (downtime)"]
+    direction TB
+    A3["App stack<br/>scaled to 0"]
+    M3[("MySQL<br/>super_read_only = ON")]
+    R3[("Aurora<br/>replication stopped<br/>now writable PRIMARY")]
+    M3 -.->|"lag = 0, counts match"| R3
+    A3 -.->|"DB secret switched"| R3
+  end
+
+  subgraph S4["Stage 4: Target (online)"]
+    direction TB
+    A4["App stack<br/>Test-Prod EKS, eu-west-1"]
+    P4[("Aurora PRIMARY<br/>eu-west-1")]
+    D4[("Aurora SECONDARY<br/>eu-west-2, read-only")]
+    E4["DR app stack<br/>Test-DR EKS, eu-west-2<br/>standby (scaled to 0)"]
+    A4 -->|"reads + writes"| P4
+    P4 ==>|"Global Database<br/>storage-level replication"| D4
+    E4 -.->|"VPC peering<br/>used after switchover"| D4
+  end
+
+  S1 --> S2 --> S3 --> S4
+
+  classDef app fill:#E8F1FF,stroke:#3B6FB6,color:#1A2B4A
+  classDef mysql fill:#FFF4E5,stroke:#C77700,color:#4A2C00
+  classDef aurora fill:#E9F7EF,stroke:#2E8B57,color:#123D24
+  classDef standby fill:#F2F2F2,stroke:#888,color:#333,stroke-dasharray:4 3
+  class A1,A2,A3,A4 app
+  class M1,M2,M3 mysql
+  class R2,R3,P4,D4 aurora
+  class E4 standby
