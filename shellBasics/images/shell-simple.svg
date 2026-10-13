@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" width="900" height="640" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title>What happens when you type a command: You, Shell, Kernel, Hardware, explained with a restaurant</title>
+  <defs>
+    <marker id="down" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52606d"/>
+    </marker>
+    <marker id="up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f9a5b"/>
+    </marker>
+    <style>
+      .big { fill:#1f2933; font-size:22px; font-weight:800 }
+      .txt { fill:#3e4c59; font-size:15px }
+      .mono{ fill:#1f2933; font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace; font-size:15px; font-weight:700 }
+      .an  { fill:#1f2933; font-size:17px; font-weight:700 }
+      .ans { fill:#52606d; font-size:14px }
+      .hd  { fill:#616e7c; font-size:12px; font-weight:700; letter-spacing:1.5px }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="898" height="638" rx="16" fill="#fbfbfd" stroke="#dfe3e8" stroke-width="2"/>
+
+  <text x="40" y="48" fill="#1f2933" font-size="26" font-weight="800">What happens when you type a command?</text>
+
+  <text x="110" y="88" class="hd">IN THE COMPUTER</text>
+  <text x="600" y="88" class="hd">LIKE A RESTAURANT</text>
+
+  <!-- output arrow (left) -->
+  <line x1="62" y1="550" x2="62" y2="122" stroke="#2f9a5b" stroke-width="3" marker-end="url(#up)"/>
+  <text transform="translate(50,335) rotate(-90)" text-anchor="middle" fill="#23784a" font-size="12" font-weight="700" letter-spacing="1">ANSWER COMES BACK UP</text>
+
+  <!-- 1. You -->
+  <rect x="90" y="100" width="470" height="90" rx="14" fill="#fdebdc" stroke="#e08a4a" stroke-width="2"/>
+  <text x="115" y="136" class="big">You</text>
+  <text x="115" y="166" class="txt">type a command, e.g. <tspan class="mono">ls</tspan></text>
+  <rect x="590" y="108" width="280" height="74" rx="12" fill="#ffffff" stroke="#e08a4a" stroke-dasharray="5 4"/>
+  <text x="610" y="138" class="an">Customer</text>
+  <text x="610" y="162" class="ans">"One masala dosa, please."</text>
+
+  <line x1="325" y1="192" x2="325" y2="226" stroke="#52606d" stroke-width="3" marker-end="url(#down)"/>
+
+  <!-- 2. Shell -->
+  <rect x="90" y="230" width="470" height="90" rx="14" fill="#dcf2e3" stroke="#2f9a5b" stroke-width="3"/>
+  <text x="115" y="266" class="big">Shell <tspan fill="#3e4c59" font-size="16" font-weight="600">(bash)</tspan></text>
+  <text x="115" y="296" class="txt">understands your command and passes it on</text>
+  <rect x="590" y="238" width="280" height="74" rx="12" fill="#ffffff" stroke="#2f9a5b" stroke-dasharray="5 4"/>
+  <text x="610" y="268" class="an">Waiter</text>
+  <text x="610" y="292" class="ans">takes your order to the kitchen</text>
+
+  <line x1="325" y1="322" x2="325" y2="356" stroke="#52606d" stroke-width="3" marker-end="url(#down)"/>
+
+  <!-- 3. Kernel -->
+  <rect x="90" y="360" width="470" height="90" rx="14" fill="#ebe3f8" stroke="#7a55c2" stroke-width="2"/>
+  <text x="115" y="396" class="big">Kernel <tspan fill="#3e4c59" font-size="16" font-weight="600">(Linux)</tspan></text>
+  <text x="115" y="426" class="txt">the boss of the computer: does the actual work</text>
+  <rect x="590" y="368" width="280" height="74" rx="12" fill="#ffffff" stroke="#7a55c2" stroke-dasharray="5 4"/>
+  <text x="610" y="398" class="an">Chef</text>
+  <text x="610" y="422" class="ans">cooks the food using the kitchen</text>
+
+  <line x1="325" y1="452" x2="325" y2="486" stroke="#52606d" stroke-width="3" marker-end="url(#down)"/>
+
+  <!-- 4. Hardware -->
+  <rect x="90" y="490" width="470" height="90" rx="14" fill="#eceef1" stroke="#7b8794" stroke-width="2"/>
+  <text x="115" y="526" class="big">Hardware</text>
+  <text x="115" y="556" class="txt">CPU, memory, disk, keyboard, screen</text>
+  <rect x="590" y="498" width="280" height="74" rx="12" fill="#ffffff" stroke="#7b8794" stroke-dasharray="5 4"/>
+  <text x="610" y="528" class="an">Kitchen</text>
+  <text x="610" y="552" class="ans">stove, fridge, pans</text>
+
+  <text x="40" y="616" class="txt"><tspan font-weight="700">ls</tspan> → shell understands it → kernel reads the folder from the disk → the file list appears on your screen.</text>
+</svg>

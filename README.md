@@ -20,6 +20,7 @@ its own.
 | Folder | What it does |
 |---|---|
 | [`flaskFundamentals/`](./flaskFundamentals) | "Session 0" for `shoppingCart/`: standalone scripts covering variables, data types, functions, writing your own module, installing/using a package, a first Flask server, a login page, splitting routes into their own file, and calling an external API from a route |
+| [`shellBasics/`](./shellBasics) | 90-minute hands-on intro to bash scripting (`echo`, variables, `$1`/`$#`, `if`, `case`, `grep` patterns), ending with a grep menu program built step by step |
 | [`insuranceAI/`](./insuranceAI) | Flask + MySQL (phpMyAdmin) demo app: login/dashboard where a user files an insurance claim (text + optional photo/medical report) and Grok AI (xAI) reads it and writes a claim summary |
 | [`shoppingCart/`](./shoppingCart) | Flask + SQLite teaching project: registration/login, dashboard + cart synced from a products API, checkout, admin panel. Ships with a 6-session/12-hour course plan |
 | [`shoppingCartBuild/`](./shoppingCartBuild) | Companion to `shoppingCart/`: the same app broken into `Day1`–`Day6` folders, each a runnable checkpoint matching one course-plan session |

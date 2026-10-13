@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 810" width="1000" height="810" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title>How a command reaches the hardware: user, terminal, shell, utilities, system calls, kernel, hardware (with Windows equivalents)</title>
+  <defs>
+    <marker id="headDown" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d9772f"/>
+    </marker>
+    <marker id="headUp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f9a5b"/>
+    </marker>
+    <style>
+      .t  { fill:#1f2933; font-size:16px; font-weight:700 }
+      .d  { fill:#3e4c59; font-size:13px }
+      .s  { fill:#3e4c59; font-size:11.5px }
+      .m  { fill:#1f2933; font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace; font-size:13px }
+      .sb { fill:#1f2933; font-size:13px; font-weight:700 }
+      .hd { fill:#616e7c; font-size:12px; font-weight:700; letter-spacing:1.5px }
+      .br { fill:#616e7c; font-size:11px; font-weight:700; letter-spacing:2px }
+    </style>
+  </defs>
+
+  <!-- card -->
+  <rect x="1" y="1" width="998" height="808" rx="16" fill="#fbfbfd" stroke="#dfe3e8" stroke-width="2"/>
+
+  <!-- title -->
+  <text x="30" y="46" fill="#1f2933" font-size="24" font-weight="800">How a command reaches the hardware</text>
+  <text x="30" y="72" class="d">Example: you type <tspan class="m">bash prog5.sh file1.txt</tspan>. The request travels down the layers, the output comes back up.</text>
+
+  <!-- column headers -->
+  <text x="95" y="100" class="hd">LINUX</text>
+  <text x="730" y="100" class="hd">WINDOWS EQUIVALENT</text>
+
+  <!-- side brackets -->
+  <path d="M78,110 H70 V420 H78" fill="none" stroke="#9aa5b1" stroke-width="2"/>
+  <text transform="translate(56,265) rotate(-90)" text-anchor="middle" class="br">USER SPACE</text>
+  <path d="M78,450 H70 V635 H78" fill="none" stroke="#9aa5b1" stroke-width="2"/>
+  <text transform="translate(56,542) rotate(-90)" text-anchor="middle" class="br">KERNEL SPACE</text>
+
+  <!-- 1. user -->
+  <rect x="95" y="110" width="560" height="55" rx="10" fill="#fdebdc" stroke="#e08a4a" stroke-width="1.5"/>
+  <text x="115" y="133" class="t">You (the user)</text>
+  <text x="115" y="153" class="m">$ bash prog5.sh file1.txt</text>
+  <rect x="730" y="110" width="250" height="55" rx="10" fill="#fdebdc" stroke="#e08a4a" stroke-width="1.5"/>
+  <text x="748" y="133" class="t">You (the user)</text>
+  <text x="748" y="153" class="m">C:\&gt; dir</text>
+
+  <!-- 2. terminal -->
+  <rect x="95" y="180" width="560" height="60" rx="10" fill="#e3eefc" stroke="#5b8def" stroke-width="1.5"/>
+  <text x="115" y="204" class="t">Terminal (the window)</text>
+  <text x="115" y="225" class="d">Shows text and passes your keystrokes to the shell. e.g. GNOME Terminal, Konsole</text>
+  <rect x="730" y="180" width="250" height="60" rx="10" fill="#e3eefc" stroke="#5b8def" stroke-width="1.5"/>
+  <text x="748" y="204" class="t">Windows Terminal</text>
+  <text x="748" y="225" class="d">conhost.exe (older console)</text>
+
+  <!-- 3. shell (focus of this session) -->
+  <rect x="95" y="255" width="560" height="80" rx="10" fill="#dcf2e3" stroke="#2f9a5b" stroke-width="3"/>
+  <text x="115" y="280" class="t">Shell: bash (also zsh, sh)</text>
+  <rect x="540" y="266" width="102" height="22" rx="11" fill="#2f9a5b"/>
+  <text x="591" y="281" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700" letter-spacing="1">THIS SESSION</text>
+  <text x="115" y="302" class="d">Reads your command, replaces <tspan class="m">$1  $#  $name</tspan>, runs built-ins itself</text>
+  <text x="115" y="321" class="d">(<tspan class="m">echo  read  if  case  cd</tspan>) and starts other programs.</text>
+  <rect x="730" y="255" width="250" height="80" rx="10" fill="#dcf2e3" stroke="#2f9a5b" stroke-width="1.5"/>
+  <text x="748" y="280" class="t">cmd.exe · PowerShell</text>
+  <text x="748" y="302" class="d">Scripts: <tspan class="m">.bat  .ps1</tspan></text>
+  <text x="748" y="321" class="d">(Git Bash / WSL give real bash)</text>
+
+  <!-- 4. utilities -->
+  <rect x="95" y="350" width="560" height="70" rx="10" fill="#eef7f0" stroke="#6fb886" stroke-width="1.5"/>
+  <text x="115" y="373" class="t">Commands / utilities <tspan class="d" font-weight="400">(separate programs on disk, in /usr/bin)</tspan></text>
+  <g class="m">
+    <rect x="115" y="385" width="34" height="24" rx="5" fill="#ffffff" stroke="#6fb886"/><text x="132" y="402" text-anchor="middle" class="m">ls</text>
+    <rect x="157" y="385" width="42" height="24" rx="5" fill="#ffffff" stroke="#6fb886"/><text x="178" y="402" text-anchor="middle" class="m">cat</text>
+    <rect x="207" y="385" width="50" height="24" rx="5" fill="#ffffff" stroke="#2f9a5b" stroke-width="2"/><text x="232" y="402" text-anchor="middle" class="m" font-weight="700">grep</text>
+    <rect x="265" y="385" width="34" height="24" rx="5" fill="#ffffff" stroke="#6fb886"/><text x="282" y="402" text-anchor="middle" class="m">cp</text>
+    <rect x="307" y="385" width="34" height="24" rx="5" fill="#ffffff" stroke="#6fb886"/><text x="324" y="402" text-anchor="middle" class="m">mv</text>
+    <rect x="349" y="385" width="58" height="24" rx="5" fill="#ffffff" stroke="#6fb886"/><text x="378" y="402" text-anchor="middle" class="m">chmod</text>
+    <rect x="415" y="385" width="50" height="24" rx="5" fill="#ffffff" stroke="#6fb886"/><text x="440" y="402" text-anchor="middle" class="m">find</text>
+    <rect x="473" y="385" width="34" height="24" rx="5" fill="#ffffff" stroke="#6fb886"/><text x="490" y="402" text-anchor="middle" class="m">wc</text>
+  </g>
+  <rect x="730" y="350" width="250" height="70" rx="10" fill="#eef7f0" stroke="#6fb886" stroke-width="1.5"/>
+  <text x="748" y="373" class="t">Commands</text>
+  <text x="748" y="402" class="m">dir  type  findstr  copy</text>
+
+  <!-- user / kernel boundary -->
+  <line x1="30" y1="435" x2="980" y2="435" stroke="#9aa5b1" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+  <!-- 5. system calls -->
+  <rect x="95" y="450" width="560" height="50" rx="10" fill="#f3edfc" stroke="#8b6cc7" stroke-width="1.5"/>
+  <text x="115" y="471" class="t">System calls <tspan class="d" font-weight="400">(the only door into the kernel)</tspan></text>
+  <text x="115" y="491" class="m">open()  read()  write()  fork()  exec()</text>
+  <rect x="730" y="450" width="250" height="50" rx="10" fill="#f3edfc" stroke="#8b6cc7" stroke-width="1.5"/>
+  <text x="748" y="471" class="t">Win32 / Native API</text>
+  <text x="748" y="491" class="m">ntdll.dll</text>
+
+  <!-- 6. kernel -->
+  <rect x="95" y="515" width="560" height="120" rx="10" fill="#ebe3f8" stroke="#7a55c2" stroke-width="1.5"/>
+  <text x="115" y="539" class="t">Linux kernel <tspan class="d" font-weight="400">(the core of the operating system)</tspan></text>
+  <g>
+    <rect x="105" y="552" width="100" height="70" rx="8" fill="#ffffff" stroke="#7a55c2"/>
+    <text x="155" y="580" text-anchor="middle" class="sb">Processes</text>
+    <text x="155" y="600" text-anchor="middle" class="s">runs programs</text>
+    <rect x="215" y="552" width="100" height="70" rx="8" fill="#ffffff" stroke="#7a55c2"/>
+    <text x="265" y="580" text-anchor="middle" class="sb">Memory</text>
+    <text x="265" y="600" text-anchor="middle" class="s">shares the RAM</text>
+    <rect x="325" y="552" width="100" height="70" rx="8" fill="#ffffff" stroke="#7a55c2"/>
+    <text x="375" y="580" text-anchor="middle" class="sb">File system</text>
+    <text x="375" y="600" text-anchor="middle" class="s">files, folders</text>
+    <rect x="435" y="552" width="100" height="70" rx="8" fill="#ffffff" stroke="#7a55c2"/>
+    <text x="485" y="580" text-anchor="middle" class="sb">Drivers</text>
+    <text x="485" y="600" text-anchor="middle" class="s">talk to devices</text>
+    <rect x="545" y="552" width="100" height="70" rx="8" fill="#ffffff" stroke="#7a55c2"/>
+    <text x="595" y="580" text-anchor="middle" class="sb">Networking</text>
+    <text x="595" y="600" text-anchor="middle" class="s">Wi-Fi, LAN</text>
+  </g>
+  <rect x="730" y="515" width="250" height="120" rx="10" fill="#ebe3f8" stroke="#7a55c2" stroke-width="1.5"/>
+  <text x="748" y="539" class="t">Windows NT kernel</text>
+  <text x="748" y="566" class="m">ntoskrnl.exe</text>
+  <text x="748" y="590" class="d">+ HAL (Hardware Abstraction</text>
+  <text x="748" y="608" class="d">Layer), <tspan class="m">hal.dll</tspan></text>
+
+  <!-- 7. hardware -->
+  <rect x="95" y="650" width="560" height="85" rx="10" fill="#eceef1" stroke="#7b8794" stroke-width="1.5"/>
+  <text x="115" y="673" class="t">Hardware</text>
+  <g>
+    <rect x="105" y="688" width="100" height="34" rx="6" fill="#ffffff" stroke="#7b8794"/><text x="155" y="710" text-anchor="middle" class="sb">CPU</text>
+    <rect x="215" y="688" width="100" height="34" rx="6" fill="#ffffff" stroke="#7b8794"/><text x="265" y="710" text-anchor="middle" class="sb">RAM</text>
+    <rect x="325" y="688" width="100" height="34" rx="6" fill="#ffffff" stroke="#7b8794"/><text x="375" y="710" text-anchor="middle" class="sb">Disk / SSD</text>
+    <rect x="435" y="688" width="100" height="34" rx="6" fill="#ffffff" stroke="#7b8794"/><text x="485" y="710" text-anchor="middle" class="sb">Screen, keys</text>
+    <rect x="545" y="688" width="100" height="34" rx="6" fill="#ffffff" stroke="#7b8794"/><text x="595" y="710" text-anchor="middle" class="sb">Network card</text>
+  </g>
+  <rect x="730" y="650" width="250" height="85" rx="10" fill="#eceef1" stroke="#7b8794" stroke-width="1.5"/>
+  <text x="748" y="673" class="t">Same hardware</text>
+  <text x="748" y="697" class="d">The OS changes, the machine</text>
+  <text x="748" y="715" class="d">does not.</text>
+
+  <!-- request / output arrows -->
+  <line x1="684" y1="125" x2="684" y2="700" stroke="#d9772f" stroke-width="3" marker-end="url(#headDown)"/>
+  <text transform="translate(677,300) rotate(-90)" text-anchor="middle" fill="#b85f1f" font-size="11" font-weight="700" letter-spacing="1">REQUEST GOES DOWN</text>
+  <line x1="712" y1="710" x2="712" y2="135" stroke="#2f9a5b" stroke-width="3" marker-end="url(#headUp)"/>
+  <text transform="translate(705,300) rotate(-90)" text-anchor="middle" fill="#23784a" font-size="11" font-weight="700" letter-spacing="1">OUTPUT COMES UP</text>
+
+  <!-- footer -->
+  <text x="30" y="768" class="d"><tspan font-weight="700">Linux</tspan> is the kernel only. <tspan font-weight="700">Ubuntu, Fedora</tspan> = Linux kernel + shell + utilities + apps (a "distribution").</text>
+  <text x="30" y="790" class="d"><tspan font-weight="700">Shell</tspan> = the program that understands your commands. <tspan font-weight="700">Terminal</tspan> = the window it runs in.</text>
+</svg>
