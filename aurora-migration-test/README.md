@@ -31,8 +31,11 @@ Test first, then Prod. Production already runs Aurora, so once this rehearsal pa
   - [0.1 Same region or different region?](#01-same-region-or-different-region)
   - [0.2 Do we need VPC peering?](#02-do-we-need-vpc-peering)
   - [0.3 Version compatibility (check before anything else)](#03-version-compatibility-check-before-anything-else)
-  - [0.4 Tools on the operations workstation](#04-tools-on-the-operations-workstation)
-  - [0.5 Variables used throughout](#05-variables-used-throughout)
+  - [0.4 Tools you need](#04-tools-you-need)
+  - [0.5 Install the tools](#05-install-the-tools)
+  - [0.6 Check the installation](#06-check-the-installation)
+  - [0.7 Variables used throughout](#07-variables-used-throughout)
+  - [0.8 Connect to AWS and the EKS clusters](#08-connect-to-aws-and-the-eks-clusters)
 - [1. Create the AWS accounts](#1-create-the-aws-accounts)
 - [2. Provision the EKS clusters and a Test app stack on MySQL](#2-provision-the-eks-clusters-and-a-test-app-stack-on-mysql)
   - [2.1 Plan VPC CIDRs (must not overlap where peering is used)](#21-plan-vpc-cidrs-must-not-overlap-where-peering-is-used)
@@ -260,11 +263,98 @@ If you put the DR EKS in the same account and VPC as the Aurora secondary, you w
 - MySQL 5.7 is end of life. Do not use it for this test.
 - If your deployment tooling manages the app's DB secret, confirm it can point the app at an external database host without recreating the secret (used in Section 6).
 
-### 0.4 Tools on the operations workstation
+### 0.4 Tools you need
 
-`aws` CLI v2, `kubectl`, `jq`, your infrastructure-as-code tool (Terraform, eksctl…), a MySQL 8.0 client (optional, the runbook uses a client pod).
+Everything in this runbook runs from one **operations workstation** (your laptop, or a Linux VM), in a bash or zsh terminal.
 
-### 0.5 Variables used throughout
+| Tool | What it is used for | Sections | Needed? |
+|---|---|---|---|
+| **AWS CLI v2** (`aws`) | Accounts, Aurora, VPCs, peering, Global Database, cleanup | 1, 3, 7, 8, 9, 11 | Required |
+| **kubectl** | Client pods, secrets, scaling the app down and up, connectivity tests | 3.5, 4, 5, 6, 8.4, 9 | Required |
+| **jq** | Decoding the DB secret to readable text | 4.1, 6.2 | Required |
+| **Git** | Getting this runbook and your infrastructure code | 2 | Required |
+| **Terraform** *or* **eksctl** | Creating the VPCs and EKS clusters (pick the one your team uses) | 2.2, 11 | Required (one of them) |
+| **MySQL 8.0 client** (`mysql`, `mysqldump`) | Running SQL from your laptop | 4, 5 | Optional: the runbook runs SQL inside a client pod |
+| `bash`/`zsh`, `curl`, `unzip`, `grep`, `awk`, `xargs`, `diff` | Small shell steps | throughout | Already on macOS and Linux |
+
+Not needed on the workstation: Docker (images are built by your CI/CD pipeline) and a MySQL server (MySQL runs in the cluster).
+
+You also need **access**, which is not an install: AWS Organizations management account rights (Section 1), admin rights in the Test-Prod and Test-DR accounts, and permission to use both EKS clusters.
+
+### 0.5 Install the tools
+
+Pick the block for your computer. Run one line at a time.
+
+**macOS (Homebrew)**
+
+```bash
+# Homebrew itself, if `brew --version` fails
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+brew install awscli kubernetes-cli jq git
+
+# One of these two
+brew tap hashicorp/tap && brew install hashicorp/tap/terraform
+brew install eksctl
+
+# Optional: MySQL client (installed outside the normal PATH, so add it)
+brew install mysql-client@8.0
+echo 'export PATH="$(brew --prefix mysql-client@8.0)/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+```
+
+**Linux (Ubuntu / Debian, x86_64)**
+
+```bash
+sudo apt-get update
+sudo apt-get install -y curl unzip jq git gnupg lsb-release
+
+# AWS CLI v2
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+unzip -q awscliv2.zip && sudo ./aws/install && rm -rf aws awscliv2.zip
+
+# kubectl: use a version within one minor version of your EKS cluster (e.g. v1.30.x for EKS 1.30)
+export KUBECTL_VERSION=<v1.30.x>
+curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl
+
+# Terraform (HashiCorp apt repository)
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+  | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt-get update && sudo apt-get install -y terraform
+
+# ...or eksctl
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz"
+tar -xzf eksctl_Linux_amd64.tar.gz -C /tmp && sudo install -m 0755 /tmp/eksctl /usr/local/bin/eksctl && rm eksctl_Linux_amd64.tar.gz
+
+# Optional: MySQL client
+sudo apt-get install -y mysql-client
+```
+
+On ARM Linux (Graviton), replace `x86_64` with `aarch64`, `amd64` with `arm64`, and `Linux_amd64` with `Linux_arm64`.
+
+**Windows**
+
+The commands in this runbook are bash. Install WSL2 with Ubuntu, then follow the Linux block inside the Ubuntu terminal:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+### 0.6 Check the installation
+
+```bash
+aws --version              # aws-cli/2.x
+kubectl version --client   # Client Version: v1.xx
+jq --version
+git --version
+terraform -version         # or: eksctl version
+mysql --version            # optional
+```
+
+If a command says `command not found`, open a new terminal (so the PATH reloads) and try again.
+
+### 0.7 Variables used throughout
 
 ```bash
 export AWS_PAGER=""
@@ -284,6 +374,42 @@ export INSTANCE_CLASS=db.r6g.large    # Global DB needs memory-optimized classes
 export MASTER_USER=dbadmin
 export MASTER_PW='<strong-password>'  # or use --manage-master-user-password instead
 ```
+
+### 0.8 Connect to AWS and the EKS clusters
+
+**AWS CLI profiles.** Create one profile per account. Use AWS IAM Identity Center (SSO) if your organization has it; otherwise use access keys.
+
+```bash
+# With SSO (recommended)
+aws configure sso --profile $TESTPROD_PROFILE
+aws configure sso --profile $TESTDR_PROFILE
+
+# ...or with access keys
+aws configure --profile $TESTPROD_PROFILE
+aws configure --profile $TESTDR_PROFILE
+
+# Check: each should print the right account ID
+aws sts get-caller-identity --profile $TESTPROD_PROFILE
+aws sts get-caller-identity --profile $TESTDR_PROFILE
+```
+
+Section 1 runs in the **Organizations management account**. Set up a profile for it the same way (for example `mgmt`) and run `export AWS_PROFILE=mgmt` before Section 1. Run `unset AWS_PROFILE` afterwards.
+
+**kubectl contexts.** Do this once the EKS clusters exist (after Section 2.2):
+
+```bash
+aws eks update-kubeconfig --region $PRIMARY_REGION --profile $TESTPROD_PROFILE \
+  --name <test-prod-eks-cluster-name> --alias testprod
+aws eks update-kubeconfig --region $DR_REGION --profile $TESTDR_PROFILE \
+  --name <test-dr-eks-cluster-name> --alias testdr
+
+kubectl config get-contexts
+kubectl config use-context testprod   # Sections 3 to 7 and the Test-Prod steps of 9
+kubectl --context testprod get nodes  # quick check
+kubectl --context testdr get nodes
+```
+
+Switch to `testdr` for Section 8.4 and the DR steps of Section 9.
 
 ---
 
@@ -327,6 +453,8 @@ A VPC's primary CIDR cannot be changed after the cluster is built, so set it cor
 In each account, create the VPC and EKS cluster with your infrastructure-as-code tool (Terraform, eksctl, CloudFormation…), using the CIDRs above.
 
 Do not create any VPC peering here. Peering is created manually in Section 8 because it is cross-account.
+
+When both clusters are up, connect `kubectl` to them (Section 0.8).
 
 ### 2.3 Deploy the Test app stack on containerized MySQL (Test-Prod)
 
@@ -812,10 +940,13 @@ Add a second instance (`${SEC_CLUSTER_ID}-2`, another AZ) so the DR side has in-
 #### B.4 Check replication
 
 ```bash
+# Start time 30 minutes ago. Linux: date -d   macOS: date -v
+export START=$(date -u -d '-30 min' +%FT%TZ 2>/dev/null || date -u -v-30M +%FT%TZ)
+
 aws cloudwatch get-metric-statistics --region $DR_REGION --profile $TESTPROD_PROFILE \
   --namespace AWS/RDS --metric-name AuroraGlobalDBReplicationLag \
   --dimensions Name=DBClusterIdentifier,Value=$SEC_CLUSTER_ID \
-  --start-time $(date -u -d '-30 min' +%FT%TZ) --end-time $(date -u +%FT%TZ) \
+  --start-time $START --end-time $(date -u +%FT%TZ) \
   --period 60 --statistics Average Maximum
 
 export SEC_WRITER_EP=$(aws rds describe-db-clusters --region $DR_REGION --profile $TESTPROD_PROFILE \
