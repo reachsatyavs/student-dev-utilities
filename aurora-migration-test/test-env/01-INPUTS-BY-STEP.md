@@ -1,8 +1,8 @@
 # Inputs by step: what each step needs, and where it comes from
 
-> **Flow diagram:** see all steps A1 to F4 on one page in [FLOW.md](FLOW.md).
+[Test plan](README.md) · **Inputs by step** · [Flow](02-FLOW.md) · [Phase A](03-PHASE-A-build-test-environment.md) · [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md)
 
-Companion to [Phase A](PHASE-A-build-test-environment.md) and [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md).
+Companion to [Phase A](03-PHASE-A-build-test-environment.md) and [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md).
 
 How to use it:
 
@@ -149,3 +149,7 @@ Write values here as each step produces them. **No passwords or secret keys:** f
 | DR secret backup file location | C3 | E1 | |
 | Pre-migration snapshot ID (if any) | B6 | F3 | |
 | Pre-rollback snapshot ID | E2 | F3 | |
+
+---
+
+**Next:** [Flow](02-FLOW.md)
