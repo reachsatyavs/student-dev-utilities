@@ -1,1 +1,7 @@
 .DS_Store
+
+# aurora-migration-test: vendor-specific or sensitive material, keep local only
+aurora-migration-test/*.pdf
+aurora-migration-test/docker-compose-file.txt
+aurora-migration-test/jenkins/
+aurora-migration-test/test-env/local/
