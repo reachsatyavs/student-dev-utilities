@@ -4,4 +4,4 @@
 aurora-migration-test/*.pdf
 aurora-migration-test/docker-compose-file.txt
 aurora-migration-test/jenkins/
-aurora-migration-test/test-env/
+aurora-migration-test/test-env/local/

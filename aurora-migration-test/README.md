@@ -8,6 +8,8 @@ This runbook rehearses, in a Test environment, the move from a MySQL database to
 
 > All commands are examples. Replace every `<placeholder>`, review each step, and run them one at a time. Nothing here should be pasted as one script.
 
+> **Already on Aurora?** If the source is already Aurora MySQL (replicated to DR today by DMS), skip the MySQL migration below and follow the step-by-step Test runbooks instead: [Phase A: build the Test environment](test-env/PHASE-A-build-test-environment.md), then [Phases B to F: Global Database, DR repoint, drills, rollback, cleanup](test-env/PHASE-B-to-F-global-db-drills-cleanup.md).
+
 Test first, then Prod. Production already runs Aurora, so once this rehearsal passes, the Prod change covers only Sections 7 to 9 plus retiring DMS.
 
 ---
