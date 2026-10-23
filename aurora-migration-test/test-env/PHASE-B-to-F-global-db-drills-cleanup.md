@@ -1,5 +1,7 @@
 # Phases B to F: Global Database, DR repoint, drills, rollback, cleanup
 
+> **Flow diagram:** see all steps A1 to F4 on one page in [FLOW.md](FLOW.md).
+
 Continues from [Phase A](PHASE-A-build-test-environment.md). Run the blocks in order and replace every `<placeholder>`.
 **Where** each block runs: the **EC2 ops instance** (most of it), **Jenkins**, or a **browser**.
 

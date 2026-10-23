@@ -1,5 +1,7 @@
 # Phase A: Build the Test environment (A1 to A9)
 
+> **Flow diagram:** see all steps A1 to F4 on one page in [FLOW.md](FLOW.md).
+
 Copy and run the blocks in order. Replace every `<placeholder>` first.
 **Where** each block runs is shown at the top of it: your **laptop**, the **EC2 ops instance**, or **Jenkins**.
 
