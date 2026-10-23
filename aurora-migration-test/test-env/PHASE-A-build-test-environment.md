@@ -1,6 +1,6 @@
 # Phase A: Build the Test environment (A1 to A9)
 
-> **Flow diagram:** see all steps A1 to F4 on one page in [FLOW.md](FLOW.md).
+[Test plan](README.md) · [Inputs by step](INPUTS-BY-STEP.md) · [Flow](FLOW.md) · **Phase A** · [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
 
 Copy and run the blocks in order. Replace every `<placeholder>` first.
 **Where** each block runs is shown at the top of it: your **laptop**, the **EC2 ops instance**, or **Jenkins**.
@@ -462,3 +462,7 @@ The only Production step it would rehearse is "stop the DMS task", which is a si
 - [ ] A8 Orders and an admin UI change made; order count recorded
 
 Cost note: from A3 onwards, two EKS clusters, their nodes and two Aurora clusters run around the clock. Tear down with bootstrap mode `cleanup` when testing is done.
+
+---
+
+**Next:** [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
