@@ -1,6 +1,6 @@
 # Phase A: Build the Test environment (A1 to A9)
 
-[Test plan](README.md) · [Inputs by step](INPUTS-BY-STEP.md) · [Flow](FLOW.md) · **Phase A** · [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
+[Test plan](README.md) · [Inputs by step](01-INPUTS-BY-STEP.md) · [Flow](02-FLOW.md) · **Phase A** · [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md)
 
 Copy and run the blocks in order. Replace every `<placeholder>` first.
 **Where** each block runs is shown at the top of it: your **laptop**, the **EC2 ops instance**, or **Jenkins**.
@@ -465,4 +465,4 @@ Cost note: from A3 onwards, two EKS clusters, their nodes and two Aurora cluster
 
 ---
 
-**Next:** [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
+**Next:** [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md)

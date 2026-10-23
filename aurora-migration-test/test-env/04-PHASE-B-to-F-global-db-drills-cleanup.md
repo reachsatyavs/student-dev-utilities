@@ -1,8 +1,8 @@
 # Phases B to F: Global Database, DR repoint, drills, rollback, cleanup
 
-[Test plan](README.md) · [Inputs by step](INPUTS-BY-STEP.md) · [Flow](FLOW.md) · [Phase A](PHASE-A-build-test-environment.md) · **Phases B to F**
+[Test plan](README.md) · [Inputs by step](01-INPUTS-BY-STEP.md) · [Flow](02-FLOW.md) · [Phase A](03-PHASE-A-build-test-environment.md) · **Phases B to F**
 
-Continues from [Phase A](PHASE-A-build-test-environment.md). Run the blocks in order and replace every `<placeholder>`.
+Continues from [Phase A](03-PHASE-A-build-test-environment.md). Run the blocks in order and replace every `<placeholder>`.
 **Where** each block runs: the **EC2 ops instance** (most of it), **Jenkins**, or a **browser**.
 
 The commands follow the tested reference run, adjusted for Test:

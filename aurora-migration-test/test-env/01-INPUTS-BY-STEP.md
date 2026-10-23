@@ -1,8 +1,8 @@
 # Inputs by step: what each step needs, and where it comes from
 
-[Test plan](README.md) · **Inputs by step** · [Flow](FLOW.md) · [Phase A](PHASE-A-build-test-environment.md) · [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
+[Test plan](README.md) · **Inputs by step** · [Flow](02-FLOW.md) · [Phase A](03-PHASE-A-build-test-environment.md) · [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md)
 
-Companion to [Phase A](PHASE-A-build-test-environment.md) and [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md).
+Companion to [Phase A](03-PHASE-A-build-test-environment.md) and [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md).
 
 How to use it:
 
@@ -152,4 +152,4 @@ Write values here as each step produces them. **No passwords or secret keys:** f
 
 ---
 
-**Next:** [Flow](FLOW.md)
+**Next:** [Flow](02-FLOW.md)

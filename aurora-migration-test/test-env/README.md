@@ -2,7 +2,7 @@
 
 **Start here.** This page states why we are testing, what must be true at the end, and where to find each part of the run.
 
-**Test plan** · [Inputs by step](INPUTS-BY-STEP.md) · [Flow](FLOW.md) · [Phase A](PHASE-A-build-test-environment.md) · [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
+**Test plan** · [Inputs by step](01-INPUTS-BY-STEP.md) · [Flow](02-FLOW.md) · [Phase A](03-PHASE-A-build-test-environment.md) · [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md)
 
 ---
 
@@ -66,7 +66,7 @@ Each requirement is checked at a specific step. The Test passes when all of them
 
 ### Prerequisites
 
-All of these must be in place before A1. The full list, with who provides each item, is in [Inputs by step, Part 1](INPUTS-BY-STEP.md#part-1-collect-before-a1) (items P1 to P20).
+All of these must be in place before A1. The full list, with who provides each item, is in [Inputs by step, Part 1](01-INPUTS-BY-STEP.md#part-1-collect-before-a1) (items P1 to P20).
 
 | Area | What is needed |
 |---|---|
@@ -103,14 +103,14 @@ flowchart LR
 
 | Phase | What | Duration | Downtime in Test-Prod | Requirements checked |
 |---|---|---|---|---|
-| [A](PHASE-A-build-test-environment.md) | Accounts, ops EC2, two platform bootstraps, app + Aurora in each region, test data | ~1 week | — | — |
-| [B](PHASE-B-to-F-global-db-drills-cleanup.md#phase-b-network-and-global-database-ec2-about-1-day-no-downtime) | Secondary VPC, peering, Global Database | 1 day | None | R1, R2 |
-| [C](PHASE-B-to-F-global-db-drills-cleanup.md#phase-c-point-test-dr-at-the-secondary-ec2--jenkins-half-a-day) | Point Test-DR at the secondary | ½ day | None | R3, R4 |
-| [D](PHASE-B-to-F-global-db-drills-cleanup.md#phase-d-drills-ec2--browser-1-to-2-days-test-only) | Switchover, failback, disaster, rebuild | 1–2 days | Yes, during drills | R5 to R9, R11 |
-| [E](PHASE-B-to-F-global-db-drills-cleanup.md#phase-e-rollback-test-ec2--jenkins-half-a-day) | Rollback to single region | ½ day | None | R10 |
-| [F](PHASE-B-to-F-global-db-drills-cleanup.md#phase-f-delete-everything-ec2--jenkins-half-a-day) | Delete all Test resources | ½ day | — | — |
+| [A](03-PHASE-A-build-test-environment.md) | Accounts, ops EC2, two platform bootstraps, app + Aurora in each region, test data | ~1 week | — | — |
+| [B](04-PHASE-B-to-F-global-db-drills-cleanup.md#phase-b-network-and-global-database-ec2-about-1-day-no-downtime) | Secondary VPC, peering, Global Database | 1 day | None | R1, R2 |
+| [C](04-PHASE-B-to-F-global-db-drills-cleanup.md#phase-c-point-test-dr-at-the-secondary-ec2--jenkins-half-a-day) | Point Test-DR at the secondary | ½ day | None | R3, R4 |
+| [D](04-PHASE-B-to-F-global-db-drills-cleanup.md#phase-d-drills-ec2--browser-1-to-2-days-test-only) | Switchover, failback, disaster, rebuild | 1–2 days | Yes, during drills | R5 to R9, R11 |
+| [E](04-PHASE-B-to-F-global-db-drills-cleanup.md#phase-e-rollback-test-ec2--jenkins-half-a-day) | Rollback to single region | ½ day | None | R10 |
+| [F](04-PHASE-B-to-F-global-db-drills-cleanup.md#phase-f-delete-everything-ec2--jenkins-half-a-day) | Delete all Test resources | ½ day | — | — |
 
-The step-by-step flow (A1 to F4, with links to each step) is in **[FLOW.md](FLOW.md)**.
+The step-by-step flow (A1 to F4, with links to each step) is in **[02-FLOW.md](02-FLOW.md)**.
 
 ---
 
@@ -119,10 +119,10 @@ The step-by-step flow (A1 to F4, with links to each step) is in **[FLOW.md](FLOW
 | # | Document | Use it for |
 |---|---|---|
 | 1 | **Test plan** (this page) | Goal, requirements, scope, timeline |
-| 2 | [Inputs by step](INPUTS-BY-STEP.md) | What to collect before A1; what each step needs and produces; values register |
-| 3 | [Flow](FLOW.md) | Diagram of all steps A1 to F4, each linked to its commands |
-| 4 | [Phase A](PHASE-A-build-test-environment.md) | Commands for A1 to A9 |
-| 5 | [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md) | Commands for B1 to F4, the drill results table, checklists |
+| 2 | [Inputs by step](01-INPUTS-BY-STEP.md) | What to collect before A1; what each step needs and produces; values register |
+| 3 | [Flow](02-FLOW.md) | Diagram of all steps A1 to F4, each linked to its commands |
+| 4 | [Phase A](03-PHASE-A-build-test-environment.md) | Commands for A1 to A9 |
+| 5 | [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md) | Commands for B1 to F4, the drill results table, checklists |
 
 Kept on your machine only (git-ignored): the reference run document, the platform settings dump, the Jenkins pipelines, and `test-env/local/`. That last folder holds the vendor-specific versions of these runbooks and the map from each placeholder to its real name.
 
@@ -152,4 +152,4 @@ Fill in at the end of the Test run.
 
 ---
 
-**Next:** [Inputs by step](INPUTS-BY-STEP.md)
+**Next:** [Inputs by step](01-INPUTS-BY-STEP.md)
