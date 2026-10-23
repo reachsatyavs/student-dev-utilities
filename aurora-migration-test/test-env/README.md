@@ -1,6 +1,6 @@
 # Aurora Global Database DR: Test plan
 
-**Start here.** This page states why we are testing, what must be true at the end, and where to find each part of the run.
+** This page states why we are testing, what must be true at the end, and where to find each part of the run.
 
 **Test plan** · [Inputs by step](01-INPUTS-BY-STEP.md) · [Flow](02-FLOW.md) · [Phase A](03-PHASE-A-build-test-environment.md) · [Phases B to F](04-PHASE-B-to-F-global-db-drills-cleanup.md)
 
