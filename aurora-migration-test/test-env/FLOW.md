@@ -1,10 +1,10 @@
 # Test runbook flow: A1 to F4
 
+[Test plan](README.md) · [Inputs by step](INPUTS-BY-STEP.md) · **Flow** · [Phase A](PHASE-A-build-test-environment.md) · [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
+
 The whole Test run on one page. Each column is a phase (A to F, left to right); steps run top to bottom.
 Colours show where a step runs: **orange** laptop, **blue** EC2 ops instance, **green** Jenkins, **purple** browser.
 Click a step in the table below the diagram to open its commands.
-
-Related: [Inputs by step](INPUTS-BY-STEP.md) · [Phase A](PHASE-A-build-test-environment.md) · [Phases B to F](PHASE-B-to-F-global-db-drills-cleanup.md)
 
 ```mermaid
 flowchart LR
@@ -151,3 +151,7 @@ Two steps marked **✔ gate** must pass before you go on: **B4** ("All prerequis
 | [F2](PHASE-B-to-F-global-db-drills-cleanup.md#f2-tear-down-the-platform-in-each-account-ec2-about-1-hour-each) | Bootstrap cleanup | EC2 ops instance |
 | [F3](PHASE-B-to-F-global-db-drills-cleanup.md#f3-leftovers-that-cost-money-ec2) | Leftover costs | EC2 ops instance |
 | [F4](PHASE-B-to-F-global-db-drills-cleanup.md#f4-dns-ops-instance-users-accounts-laptop) | DNS, EC2, keys, accounts | Laptop |
+
+---
+
+**Next:** [Phase A](PHASE-A-build-test-environment.md)
